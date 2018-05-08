@@ -1,0 +1,12 @@
+Package: r2d3maps
+Version: 0.0.0.9000
+Title: Create Maps with D3
+Description: Tools to create interactive maps in D3 with 'r2d3'.
+Authors@R: c(
+    person("Victor", "Perrier", email = "victor.perrier@dreamrs.fr", role = c("aut", "cre")),
+    person("Fanny", "Meyer", email = "fanny.meyer@dreamrs.fr", role = c("aut"))
+  )
+License: GPL-3 | file LICENSE
+Encoding: UTF-8
+LazyData: true
+ByteCompile: true
