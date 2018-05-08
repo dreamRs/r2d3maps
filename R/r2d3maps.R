@@ -7,7 +7,7 @@
 #'
 #' @export
 #'
-#' @importFrom geojsonio geojson_json geo2topo
+#' @importFrom geojsonio geojson_json geo2topo geojson_sf
 #' @importFrom r2d3 r2d3
 #'
 #' @examples
@@ -18,16 +18,25 @@
 #' }
 r2d3map <- function(shape, width = NULL, height = NULL) {
 
+  # convert to geojson
   suppressWarnings({
     shape <- geojson_json(input = shape)
   })
+
+  # keep data
+  data <- geojson_sf(shape)
+  data <- as.data.frame(data)
+  data$geometry <- NULL
+
+  # convert to topojson
   shape <- geo2topo(x = shape, object_name = "states")
 
   r2d3(
     data = shape,
     d3_version = 5,
     dependencies = system.file("js/topojson.js", package = "r2d3maps"),
-    script = system.file("js/r2d3maps.js", package = "r2d3maps")
+    script = system.file("js/r2d3maps.js", package = "r2d3maps"),
+    options = list(data = data)
   )
 
 }

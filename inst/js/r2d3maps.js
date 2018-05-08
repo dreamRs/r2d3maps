@@ -130,7 +130,7 @@ r2d3.onRender(function(json, svg, width, height, options) {
             .text(options.labs.title);
       }
     } else {
-      console.log("nope");
+      //console.log("nope");
     }
   }
 
