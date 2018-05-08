@@ -15,6 +15,7 @@
 library( r2d3maps )
 library( rnaturalearth )
 library( magrittr )
+library( dplyr )
 
 
 
@@ -42,5 +43,20 @@ r2d3map(shape = nz) %>%
 
 
 
+
+
+# Continuous colors -------------------------------------------------------
+
+fr_dept <- fr_dept %>%
+  mutate(foo_col = sample.int(n = 200, size = n(), replace = TRUE))
+
+
+r2d3map(shape = fr_dept) %>%
+  add_continuous_scale(var = "foo_col") %>%
+  add_labs(title = "France")
+
+r2d3map(shape = fr_dept) %>%
+  add_continuous_scale(var = "foo_col", palette = "Blues") %>%
+  add_labs(title = "France")
 
 

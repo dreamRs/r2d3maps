@@ -33,14 +33,14 @@ r2d3.onRender(function(json, svg, width, height, options) {
 
   // continuous colors
   if (options !== null) {
-    if (typeof options.color_type != 'undefined') {
-      if (options.color_type == 'continuous') {
+    if (typeof options.colors != 'undefined') {
+      if (options.colors.color_type == 'continuous') {
         var x = d3.scaleLinear()
                   .range([1, 200])
-                  .domain(options.range);
+                  .domain(options.colors.range_var);
         var color = d3.scaleThreshold()
-                      .domain([0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100])
-                      .range(options.colors);
+                      .domain(options.colors.range_col)
+                      .range(options.colors.colors);
 
         if (options.legend) {
           var g = svg.append("g")
@@ -82,13 +82,13 @@ r2d3.onRender(function(json, svg, width, height, options) {
             .selectAll("path")
             .data(topojson.feature(json, json.objects.states).features)
             .enter().append("path")
-              .attr("fill", function(d) { return color(d.properties.foo); })
+              .attr("fill", function(d) { return color(d.properties[options.colors.color_var]); })
               .attr("d", path)
             .on("mouseover", function(d) {
                   div.transition()
                       .duration(200)
                       .style("opacity", 0.9);
-                  div	.html("<b>" + d.properties.name + " :</b> "  + d.properties.foo + "%")
+                  div	.html("<b>" + d.properties.name + " :</b> "  + d.properties[options.colors.color_var] + "%")
                       .style("left", (d3.event.pageX) + "px")
                       .style("top", (d3.event.pageY - 28) + "px");
                 })

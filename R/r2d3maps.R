@@ -84,4 +84,77 @@ add_labs <- function(map, title = NULL) {
 
 
 
+#' Add continuous scale to a map
+#'
+#' @param map A \code{r2d3map} \code{htmlwidget} object.
+#' @param var Variable to map.
+#' @param palette Color palette
+#' @param direction Sets the order of colors in the scale.
+#'  If 1, the default, colors are ordered from darkest to lightest.
+#'  If -1, the order of colors is reversed.
+#' @param range Range of data, if \code{NULL} (default) range is calculated from data.
+#' You can specify custom value, e.g. \code{c(0, 100)} to force palette to go from 0 to 100.
+#'
+#' @export
+#'
+#' @importFrom viridisLite viridis magma plasma inferno cividis
+#' @importFrom scales col_numeric
+#'
+#' @examples
+#' \dontrun{
+#'
+#' # todo
+#'
+#' }
+add_continuous_scale <- function(map, var, palette = "viridis", direction = 1,
+                                 range = NULL) {
+  palette <- match.arg(
+    arg = palette,
+    choices = c("viridis", "magma", "plasma", "inferno", "cividis",
+                "Blues", "BuGn", "BuPu", "GnBu", "Greens",
+                "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples",
+                "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd")
+  )
+  if (is.null(map$x$options$data))
+    stop("No data !", call. = FALSE)
+  var_ <- map$x$options$data[[var]]
+  if (is.null(var_))
+    stop("Invalid var !", call. = FALSE)
+
+  if (palette %in% c("viridis", "magma", "plasma", "inferno", "cividis")) {
+    fun_pal <- get(x = palette, envir = as.environment("package:viridisLite"))
+    colors <- fun_pal(n = 11, direction = direction)
+    colors <- substr(colors, 1, 7)
+  } else {
+    pal <- col_numeric(palette = palette, domain = 0:100, na.color = "#808080")
+    colors <- pal(seq(from = 0, to = 100, by = 10))
+    if (direction > 0) {
+      colors <- rev(colors)
+    }
+  }
+  if (is.null(range)) {
+    range_col <- seq(from = min(var_, na.rm = TRUE), to = max(var_, na.rm = TRUE), length.out = 11)
+  } else {
+    range_col <- seq(from = range[1], to = range[2], length.out = 11)
+  }
+  .r2d3map_opt(
+    map = map, name = "colors",
+    color_type = "continuous",
+    color_var = var,
+    range_var = range(var_),
+    range_col = range_col,
+    colors = colors
+  )
+}
+
+
+
+add_tooltip <- function(map, value = "<b>{name}</b>: {<<scale_var>>}") {
+  if (is.null(map$x$options$data))
+    stop("No data !", call. = FALSE)
+  var <- map$x$options$data$colors$color_var
+}
+
+
+
 
