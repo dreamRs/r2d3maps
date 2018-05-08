@@ -33,7 +33,8 @@ africa <- ne_countries(continent = "Africa", returnclass = "sf")
 water <- water[, 1:9]
 water_africa <- water[iso3 %chin% africa$adm0_a3_is]
 water_africa <- as.data.frame(water_africa)
+water_africa$country_area_or_territory <- NULL
 
-usethis::use_data(water_africa)
+usethis::use_data(water_africa, overwrite = TRUE)
 
 

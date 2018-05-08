@@ -4,9 +4,8 @@
 \name{water_africa}
 \alias{water_africa}
 \title{Drinking water access in Africa (2000 - 2015)}
-\format{A data frame with 784 rows and 9 variables:
+\format{A data frame with 784 rows and 8 variables:
 \describe{
-  \item{country_area_or_territory}{Name of the country}
   \item{iso3}{ISO3 code}
   \item{year}{Year}
   \item{population_thousands}{Population (in thousands)}

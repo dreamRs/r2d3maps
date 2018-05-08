@@ -34,10 +34,21 @@ africa <- ne_countries(continent = "Africa", returnclass = "sf")
 r2d3map(shape = africa) %>%
   add_labs(title = "Africa")
 
+### South America
+south_america <- ne_countries(continent = "south america", returnclass = "sf")
+r2d3map(shape = south_america) %>%
+  add_labs(title = "South America")
+
+
+### Japan
+japan <- ne_states(country = "japan", returnclass = "sf")
+r2d3map(shape = japan) %>%
+  add_labs(title = "Japan")
+
 
 ### New Zealand
 nz <- ne_states(country = "New Zealand", returnclass = "sf")
-nz <- st_crop(nz, xmin = 159.104, ymin = -48.385, xmax = 193.601, ymax = -33.669)
+nz <- sf::st_crop(nz, xmin = 159.104, ymin = -48.385, xmax = 193.601, ymax = -33.669)
 r2d3map(shape = nz) %>%
   add_labs(title = "New Zealand")
 
