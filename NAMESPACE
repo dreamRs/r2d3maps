@@ -2,10 +2,13 @@
 
 export(add_continuous_scale)
 export(add_labs)
+export(add_tooltip)
 export(r2d3map)
 importFrom(geojsonio,geo2topo)
 importFrom(geojsonio,geojson_json)
 importFrom(geojsonio,geojson_sf)
+importFrom(glue,glue)
+importFrom(glue,glue_data)
 importFrom(r2d3,r2d3)
 importFrom(scales,col_numeric)
 importFrom(utils,modifyList)

@@ -83,35 +83,50 @@ r2d3.onRender(function(json, svg, width, height, options) {
             .data(topojson.feature(json, json.objects.states).features)
             .enter().append("path")
               .attr("fill", function(d) { return color(d.properties[options.colors.color_var]); })
-              .attr("d", path)
-            .on("mouseover", function(d) {
-                  div.transition()
-                      .duration(200)
-                      .style("opacity", 0.9);
-                  div	.html("<b>" + d.properties.name + " :</b> "  + d.properties[options.colors.color_var] + "%")
-                      .style("left", (d3.event.pageX) + "px")
-                      .style("top", (d3.event.pageY - 28) + "px");
-                })
-            .on("mouseout", function(d) {
-                    div.transition()
-                        .duration(500)
-                        .style("opacity", 0);
-                });
+              .attr("d", path);
 
 
 
       }
     } else {
-      svg.append("path")
-        .datum(states)
-        .attr("class", "feature")
-        .attr("d", path);
+      svg.append("g")
+            .attr("class", "feature")
+            .selectAll("path")
+            .data(topojson.feature(json, json.objects.states).features)
+            .enter().append("path")
+              .attr("fill", "#5f799c")
+              .attr("d", path);
     }
   } else {
     svg.append("path")
       .datum(states)
       .attr("class", "feature")
       .attr("d", path);
+  }
+
+  if (options !== null) {
+    if (options.tooltip) {
+      svg.selectAll("path")
+            //.data(options.data)
+            //.enter().append("path")
+            //.attr("d", path)
+            .on("mouseover", function(d, i) {
+                  d3.select(this).attr("opacity", 0.5);
+                  div.transition()
+                      .duration(200)
+                      .style("opacity", 0.9);
+                  div.html(options.tooltip_value[i])
+                      .style("left", (d3.event.pageX) + "px")
+                      .style("top", (d3.event.pageY - 28) + "px");
+                })
+            .on("mouseout", function(d) {
+                    d3.select(this).attr("opacity", 1);
+                    div.transition()
+                        .duration(500)
+                        .style("opacity", 0);
+                });
+
+    }
   }
 
   if (options !== null) {

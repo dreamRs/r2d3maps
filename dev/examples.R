@@ -60,3 +60,22 @@ r2d3map(shape = fr_dept) %>%
   add_labs(title = "France")
 
 
+
+
+
+
+# Tooltip -----------------------------------------------------------------
+
+# simple
+r2d3map(shape = africa) %>%
+  add_tooltip(value = "{name}")
+
+
+r2d3map(shape = fr_dept) %>%
+  add_continuous_scale(var = "foo_col") %>%
+  add_tooltip() %>%
+  add_labs(title = "France")
+
+
+
+

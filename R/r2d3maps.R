@@ -36,7 +36,7 @@ r2d3map <- function(shape, width = NULL, height = NULL) {
     d3_version = 5,
     dependencies = system.file("js/topojson.js", package = "r2d3maps"),
     script = system.file("js/r2d3maps.js", package = "r2d3maps"),
-    options = list(data = data)
+    options = list(data = data, tooltip = FALSE)
   )
 
 }
@@ -149,10 +149,42 @@ add_continuous_scale <- function(map, var, palette = "viridis", direction = 1,
 
 
 
-add_tooltip <- function(map, value = "<b>{name}</b>: {<<scale_var>>}") {
+#' Add a tooltip on a map
+#'
+#' @param map A \code{r2d3map} \code{htmlwidget} object.
+#' @param value A \code{glue} string matching vars in \code{data}.
+#' @param as_glue Use a \code{glue} string, if \code{FALSE}
+#'  you can pass a character vector as tooltip.
+#'
+#' @return A \code{r2d3map} \code{htmlwidget} object.
+#' @export
+#'
+#' @importFrom glue glue glue_data
+#'
+#' @examples
+#' \dontrun{
+#'
+#' # todo
+#'
+#' }
+add_tooltip <- function(map, value = "<b>{name}</b><<scale_var>>", as_glue = TRUE) {
   if (is.null(map$x$options$data))
     stop("No data !", call. = FALSE)
-  var <- map$x$options$data$colors$color_var
+  if (as_glue) {
+    var <- map$x$options$colors$color_var
+    if (is.null(var)) {
+      var <- ""
+    } else {
+      var <- paste0(": {", var, "}")
+    }
+    tooltip <- glue(value, scale_var = var, .open = "<<", .close = ">>")
+    tooltip <- glue_data(tooltip, .x = map$x$options$data)
+  } else {
+    tooltip <- value
+  }
+  map$x$options$tooltip_value <- tooltip
+  map$x$options$tooltip <- TRUE
+  return(map)
 }
 
 
