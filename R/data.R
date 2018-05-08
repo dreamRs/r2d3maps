@@ -1,0 +1,21 @@
+#' Drinking water access in Africa (2000 - 2015)
+#'
+#' Drinking water services refers to the accessibility,
+#' availability and quality of the main source used by
+#' households for drinking, cooking, personal hygiene and
+#' other domestic uses
+#'
+#' @format A data frame with 784 rows and 9 variables:
+#' \describe{
+#'   \item{country_area_or_territory}{Name of the country}
+#'   \item{iso3}{ISO3 code}
+#'   \item{year}{Year}
+#'   \item{population_thousands}{Population (in thousands)}
+#'   \item{urban}{Proportion of urban population}
+#'   \item{national_at_least_basic}{Basic access}
+#'   \item{national_limited_more_than_30_mins}{Drinking water from an improved source for which collection time exceeds 30 minutes for a roundtrip including queuing}
+#'   \item{national_unimproved}{Drinking water from an unprotected dug well or unprotected spring}
+#'   \item{national_surface_water}{Drinking water directly from a river, dam, lake, pond, stream, canal or irrigation canal}
+#' }
+#' @source UNICEF (\url{https://washdata.org})
+"water_africa"

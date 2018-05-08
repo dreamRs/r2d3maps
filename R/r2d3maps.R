@@ -121,9 +121,9 @@ add_continuous_scale <- function(map, var, palette = "viridis", direction = 1,
   if (is.null(var_))
     stop("Invalid var !", call. = FALSE)
 
+  var_ <- as.numeric(var_)
   if (palette %in% c("viridis", "magma", "plasma", "inferno", "cividis")) {
-    fun_pal <- get(x = palette, envir = as.environment("package:viridisLite"))
-    colors <- fun_pal(n = 11, direction = direction)
+    colors <- do.call(palette, list(n = 11, direction = direction))
     colors <- substr(colors, 1, 7)
   } else {
     pal <- col_numeric(palette = palette, domain = 0:100, na.color = "#808080")
@@ -141,7 +141,7 @@ add_continuous_scale <- function(map, var, palette = "viridis", direction = 1,
     map = map, name = "colors",
     color_type = "continuous",
     color_var = var,
-    range_var = range(var_),
+    range_var = range(var_, na.rm = TRUE),
     range_col = range_col,
     colors = colors
   )
