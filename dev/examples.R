@@ -24,18 +24,21 @@ library( magrittr )
 fr_dept <- ne_states(country = "france", returnclass = "sf")
 fr_dept <- fr_dept[fr_dept$type_en %in% "Metropolitan department", ]
 
-r2d3map(shape = fr_dept)
+r2d3map(shape = fr_dept) %>%
+  add_labs(title = "France")
 
 
 ### Africa
 africa <- ne_countries(continent = "Africa", returnclass = "sf")
-r2d3map(shape = africa)
+r2d3map(shape = africa) %>%
+  add_labs(title = "Africa")
 
 
 ### New Zealand
 nz <- ne_states(country = "New Zealand", returnclass = "sf")
 nz <- st_crop(nz, xmin = 159.104, ymin = -48.385, xmax = 193.601, ymax = -33.669)
-r2d3map(shape = nz)
+r2d3map(shape = nz) %>%
+  add_labs(title = "New Zealand")
 
 
 
