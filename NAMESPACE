@@ -2,6 +2,7 @@
 
 export(add_continuous_scale)
 export(add_labs)
+export(add_legend)
 export(add_tooltip)
 export(r2d3map)
 importFrom(geojsonio,geo2topo)

@@ -71,7 +71,7 @@ r2d3.onRender(function(json, svg, width, height, options) {
 
           g.call(d3.axisBottom(x)
               .tickSize(13)
-              .tickFormat(function(x, i) { return i ? x : x + options.legend_opts.suffix; })
+              .tickFormat(function(x, i) { return i ? x : options.legend_opts.prefix + x + options.legend_opts.suffix; })
               .tickValues(color.domain()))
             .select(".domain")
               .remove();

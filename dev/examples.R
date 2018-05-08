@@ -78,4 +78,12 @@ r2d3map(shape = fr_dept) %>%
 
 
 
+# Legend ------------------------------------------------------------------
+
+r2d3map(shape = fr_dept) %>%
+  add_continuous_scale(var = "foo_col", range = c(0, 200)) %>%
+  add_tooltip() %>%
+  add_legend(title = "Random data") %>%
+  add_labs(title = "France")
+
 

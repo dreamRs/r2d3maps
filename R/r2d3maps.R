@@ -36,7 +36,7 @@ r2d3map <- function(shape, width = NULL, height = NULL) {
     d3_version = 5,
     dependencies = system.file("js/topojson.js", package = "r2d3maps"),
     script = system.file("js/r2d3maps.js", package = "r2d3maps"),
-    options = list(data = data, tooltip = FALSE)
+    options = list(data = data, tooltip = FALSE, legend = FALSE)
   )
 
 }
@@ -189,4 +189,24 @@ add_tooltip <- function(map, value = "<b>{name}</b><<scale_var>>", as_glue = TRU
 
 
 
+#' Add a legend to a map
+#'
+#' @param map A \code{r2d3map} \code{htmlwidget} object.
+#' @param title Title for the legend.
+#' @param prefix A prefix of legend labels.
+#' @param suffix A suffix of legend labels.
+#'
+#' @return A \code{r2d3map} \code{htmlwidget} object.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#'
+#' # todo
+#'
+#' }
+add_legend <- function(map, title = "", prefix = "", suffix = "") {
+  map$x$options$legend <- TRUE
+  .r2d3map_opt(map, "legend_opts", title = title, prefix = prefix, suffix = suffix)
+}
 
