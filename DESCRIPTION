@@ -6,6 +6,8 @@ Authors@R: c(
     person("Victor", "Perrier", email = "victor.perrier@dreamrs.fr", role = c("aut", "cre")),
     person("Fanny", "Meyer", email = "fanny.meyer@dreamrs.fr", role = c("aut"))
   )
+URL: https://github.com/dreamRs/r2d3maps
+BugReports: https://github.com/dreamRs/r2d3maps/issues
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true

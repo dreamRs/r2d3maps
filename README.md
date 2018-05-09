@@ -68,3 +68,18 @@ r2d3map(shape = fr_dept) %>%
 ![](img/south_america.png)
 ![](img/france.png)
 
+
+With a shapefile read by `sf`:
+
+```r
+library( r2d3maps )
+library( sf )
+
+bay_area <- read_sf("dev/bay-area/geo_export_bb694795-f052-42b5-a0a1-01db0b2d41a6.shp")
+
+r2d3map(shape = bay_area) %>%
+  add_labs(title = "Bay Area") %>%
+  add_tooltip(value = "{po_name}")
+```
+
+![](img/bay_area.png)
