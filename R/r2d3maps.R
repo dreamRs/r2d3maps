@@ -34,7 +34,7 @@ r2d3map <- function(shape, width = NULL, height = NULL) {
   r2d3(
     data = shape,
     d3_version = 5,
-    dependencies = system.file("js/topojson.js", package = "r2d3maps"),
+    dependencies = system.file("js/topojson.min.js", package = "r2d3maps"),
     script = system.file("js/r2d3maps.js", package = "r2d3maps"),
     options = list(data = data, tooltip = FALSE, legend = FALSE)
   )
