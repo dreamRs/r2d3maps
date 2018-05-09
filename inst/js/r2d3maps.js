@@ -18,7 +18,7 @@ r2d3.onRender(function(json, svg, width, height, options) {
       .translate([0, 0]);
 
   var b = path.bounds(states),
-      s = 0.95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height),
+      s = 0.9 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height),
       t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
 
   projection
@@ -45,7 +45,7 @@ r2d3.onRender(function(json, svg, width, height, options) {
         if (options.legend) {
           var g = svg.append("g")
             .attr("class", "key")
-            .attr("transform", "translate(15," + (height - 30) + ")");
+            .attr("transform", "translate(30," + (height - 30) + ")");
 
           g.selectAll("rect")
             .data(color.range().map(function(d) {
@@ -62,7 +62,7 @@ r2d3.onRender(function(json, svg, width, height, options) {
 
           g.append("text")
             .attr("class", "caption")
-            .attr("x", x.range()[0])
+            .attr("x", -25)
             .attr("y", -6)
             .attr("fill", "#000")
             .attr("text-anchor", "start")
@@ -71,7 +71,7 @@ r2d3.onRender(function(json, svg, width, height, options) {
 
           g.call(d3.axisBottom(x)
               .tickSize(13)
-              .tickFormat(function(x, i) { return i ? x : options.legend_opts.prefix + x + options.legend_opts.suffix; })
+              .tickFormat(function(x, i) { return options.legend_opts.prefix + x + options.legend_opts.suffix; })
               .tickValues(color.domain()))
             .select(".domain")
               .remove();
@@ -134,11 +134,11 @@ r2d3.onRender(function(json, svg, width, height, options) {
       if (typeof options.labs.title != 'undefined') {
         var title = svg.append("g")
             .attr("class", "title")
-            .attr("transform", "translate(15,30)");
+            .attr("transform", "translate(10,20)");
         title.append("text")
             .attr("class", "title")
             .attr("x", 0)
-            .attr("y", -6)
+            .attr("y", -2)
             .attr("fill", "#000")
             .attr("text-anchor", "start")
             .attr("font-weight", "bold")

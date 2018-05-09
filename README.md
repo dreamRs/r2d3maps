@@ -1,6 +1,6 @@
 # r2d3maps
 
-> Fun with `r2d3` and `geojsonio` : draw D3 maps
+> Fun with [`r2d3`](https://github.com/rstudio/r2d3) and [`geojsonio`](https://github.com/ropensci/geojsonio) : draw D3 maps
 
 [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip)
 [![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
@@ -10,7 +10,7 @@
 
 You can install from Github:
 
-``` r
+```r
 source("https://install-github.me/dreamRs/r2d3maps")
 ```
 
@@ -21,10 +21,14 @@ Create D3 maps from `sf` objects:
 ![](img/africa_water_access.png)
 
 
+<br>
 
-Try it :
+Try it with NaturalEarth map data from [`rnaturalearth`](https://github.com/ropenscilabs/rnaturalearth) :
 
-``` r
+```r
+library( r2d3maps )
+library( rnaturalearth )
+
 ### Japan
 japan <- ne_states(country = "japan", returnclass = "sf")
 r2d3map(shape = japan) %>%
@@ -43,7 +47,10 @@ r2d3map(shape = nz) %>%
 
 
 
-``` r
+```r
+library( r2d3maps )
+library( rnaturalearth )
+
 ### South America
 south_america <- ne_countries(continent = "south america", returnclass = "sf")
 r2d3map(shape = south_america) %>%
