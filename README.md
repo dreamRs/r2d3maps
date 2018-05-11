@@ -69,7 +69,7 @@ r2d3map(shape = fr_dept) %>%
 ![](img/france.png)
 
 
-With a shapefile read by `sf`:
+With a shapefile read by `sf` (data from [data.sfgov.org](https://data.sfgov.org/Geographic-Locations-and-Boundaries/Bay-Area-ZIP-Codes/u5j3-svi6)):
 
 ```r
 library( r2d3maps )
@@ -83,3 +83,67 @@ r2d3map(shape = bay_area) %>%
 ```
 
 ![](img/bay_area.png)
+
+
+
+## Projection
+
+Input data must be in WGS84, but you use a different projection with D3:
+
+```r
+library( r2d3maps )
+library( rnaturalearth )
+
+us <- ne_states(country = "united states of america", returnclass = "sf")
+us <- filter(us, !name %in% c("Alaska", "Hawaii"))
+
+# Mercator
+r2d3map(shape = us) %>%
+  add_labs(title = "US (mercator)")
+
+# Albers
+r2d3map(shape = us, projection = "Albers") %>%
+  add_labs(title = "US (albers)")
+```
+
+![](img/us_mercator.png)
+![](img/us_albers.png)
+
+
+To bring back Alaska and Hawaii, see this [script](https://github.com/dreamRs/r2d3maps/blob/master/dev/us.R) (adapted from this [one](https://rud.is/b/2014/11/16/moving-the-earth-well-alaska-hawaii-with-r/) by [@hrbrmstr](https://github.com/hrbrmstr))
+
+
+![](img/usaea_albers.png)
+
+
+
+## Simplify polygons
+
+To draw lot of polygons, consider using [`rmapshaper`](https://github.com/ateucher/rmapshaper) by [@ateucher](https://github.com/ateucher):
+
+
+```r
+library( sf )
+library( rmapshaper )
+
+# shapefiles from: https://data.london.gov.uk/dataset/statistical-gis-boundary-files-london
+
+london <- read_sf("dev/London-wards-2014/London-wards-2014_ESRI/London_Ward.shp")
+london <- st_transform(london, crs = 4326)
+
+london2 <- ms_simplify(london)
+
+# pryr::object_size(london)
+# ##> 2.96 MB
+# pryr::object_size(london2)
+# ##> 532 kB
+
+r2d3map(shape = london2) %>%
+  add_tooltip("{NAME}") %>%
+  add_labs("London city")
+```
+
+![](img/london.gif)
+
+
+

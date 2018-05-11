@@ -2,7 +2,18 @@
 
 
 r2d3.onRender(function(json, svg, width, height, options) {
-  var projection = d3.geoMercator();
+
+  var projection;
+
+  if (options.projection == "Mercator") {
+    projection = d3.geoMercator();
+  } else if (options.projection == "ConicEqualArea") {
+    projection = d3.geoConicEqualArea();
+  } else if (options.projection == "NaturalEarth") {
+    projection = d3.geoNaturalEarth1();
+  } else {
+    projection = d3.geoAlbers();
+  }
 
   var path = d3.geoPath()
       .projection(projection);

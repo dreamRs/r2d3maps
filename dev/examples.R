@@ -88,6 +88,13 @@ r2d3map(shape = fr_dept) %>%
   add_labs(title = "France")
 
 
+### Tunisia
+tunisia <- ne_states(country = "tunisia", returnclass = "sf")
+r2d3map(shape = tunisia) %>%
+  add_tooltip(value = "{woe_name}") %>%
+  add_labs(title = "Tunisia")
+
+
 
 # Legend ------------------------------------------------------------------
 

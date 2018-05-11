@@ -4,10 +4,12 @@
 \alias{r2d3map}
 \title{Create a map in D3}
 \usage{
-r2d3map(shape, width = NULL, height = NULL)
+r2d3map(shape, projection = "Mercator", width = NULL, height = NULL)
 }
 \arguments{
 \item{shape}{A \code{sf} or \code{sp} object.}
+
+\item{projection}{D3 projection to use.}
 
 \item{width}{Desired width for output widget.}
 

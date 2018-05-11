@@ -2,6 +2,7 @@
 #' Create a map in D3
 #'
 #' @param shape A \code{sf} or \code{sp} object.
+#' @param projection D3 projection to use.
 #' @param width Desired width for output widget.
 #' @param height Desired height for output widget.
 #'
@@ -9,6 +10,7 @@
 #'
 #' @importFrom geojsonio geojson_json geo2topo geojson_sf
 #' @importFrom r2d3 r2d3
+#' @importFrom htmltools htmlDependency
 #'
 #' @examples
 #' \dontrun{
@@ -16,7 +18,9 @@
 #' # todo
 #'
 #' }
-r2d3map <- function(shape, width = NULL, height = NULL) {
+r2d3map <- function(shape, projection = "Mercator", width = NULL, height = NULL) {
+
+  projection <- match.arg(arg = projection, choices = c("Mercator", "Albers", "ConicEqualArea", "NaturalEarth"))
 
   # convert to geojson
   suppressWarnings({
@@ -34,9 +38,16 @@ r2d3map <- function(shape, width = NULL, height = NULL) {
   r2d3(
     data = shape,
     d3_version = 5,
-    dependencies = system.file("js/topojson.min.js", package = "r2d3maps"),
+    dependencies = htmlDependency(
+      name = "topojson", version = "3.0.2",
+      src = system.file("js", package = "r2d3maps"),
+      script = "topojson.min.js"
+    ),
     script = system.file("js/r2d3maps.js", package = "r2d3maps"),
-    options = list(data = data, tooltip = FALSE, legend = FALSE)
+    options = list(
+      data = data, projection = projection,
+      tooltip = FALSE, legend = FALSE
+    )
   )
 
 }
