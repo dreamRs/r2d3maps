@@ -75,3 +75,42 @@ image_read(path = "img/france.png") %>%
   image_resize(geometry = "400x") %>%
   image_write(path = "img/france.png")
 
+
+
+
+# Projection --------------------------------------------------------------
+
+library( r2d3maps )
+library( rnaturalearth )
+
+us <- ne_states(country = "united states of america", returnclass = "sf")
+us <- filter(us, !name %in% c("Alaska", "Hawaii"))
+
+# Mercator
+r2d3map(shape = us) %>%
+  add_labs(title = "US (mercator)")
+
+# Albers
+r2d3map(shape = us, projection = "Albers") %>%
+  add_labs(title = "US (albers)")
+
+
+library(magick)
+image_read(path = "img/us_mercator.png") %>%
+  image_resize(geometry = "400x") %>%
+  image_write(path = "img/us_mercator.png")
+
+image_read(path = "img/us_albers.png") %>%
+  image_resize(geometry = "400x") %>%
+  image_write(path = "img/us_albers.png")
+
+
+
+
+
+
+
+
+
+
+

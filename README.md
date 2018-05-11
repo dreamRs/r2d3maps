@@ -88,7 +88,7 @@ r2d3map(shape = bay_area) %>%
 
 ## Projection
 
-Input data must be in WGS84, but you use a different projection with D3:
+Input data must be in WGS84, but you can use a different projection with D3:
 
 ```r
 library( r2d3maps )
