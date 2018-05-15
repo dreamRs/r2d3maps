@@ -4,7 +4,7 @@
 \alias{add_legend}
 \title{Add a legend to a map}
 \usage{
-add_legend(map, title = "", prefix = "", suffix = "")
+add_legend(map, title = "", prefix = "", suffix = "", d3_format = NULL)
 }
 \arguments{
 \item{map}{A \code{r2d3map} \code{htmlwidget} object.}
@@ -14,6 +14,10 @@ add_legend(map, title = "", prefix = "", suffix = "")
 \item{prefix}{A prefix of legend labels.}
 
 \item{suffix}{A suffix of legend labels.}
+
+\item{d3_format}{A string passed to \code{d3.format},
+see \url{https://github.com/d3/d3-format}.
+If used \code{prefix} and \code{suffix} are ignored.}
 }
 \value{
 A \code{r2d3map} \code{htmlwidget} object.

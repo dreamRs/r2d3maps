@@ -103,6 +103,7 @@ add_labs <- function(map, title = NULL) {
 #' @param direction Sets the order of colors in the scale.
 #'  If 1, the default, colors are ordered from darkest to lightest.
 #'  If -1, the order of colors is reversed.
+#' @param n_breaks Number of breaks to cut data.
 #' @param range Range of data, if \code{NULL} (default) range is calculated from data.
 #' You can specify custom value, e.g. \code{c(0, 100)} to force palette to go from 0 to 100.
 #'
@@ -110,6 +111,7 @@ add_labs <- function(map, title = NULL) {
 #'
 #' @importFrom viridisLite viridis magma plasma inferno cividis
 #' @importFrom scales col_numeric
+#' @importFrom utils type.convert
 #'
 #' @examples
 #' \dontrun{
@@ -118,7 +120,7 @@ add_labs <- function(map, title = NULL) {
 #'
 #' }
 add_continuous_scale <- function(map, var, palette = "viridis", direction = 1,
-                                 range = NULL) {
+                                 n_breaks = 5, range = NULL) {
   palette <- match.arg(
     arg = palette,
     choices = c("viridis", "magma", "plasma", "inferno", "cividis",
@@ -130,31 +132,32 @@ add_continuous_scale <- function(map, var, palette = "viridis", direction = 1,
     stop("No data !", call. = FALSE)
   var_ <- map$x$options$data[[var]]
   if (is.null(var_))
-    stop("Invalid var !", call. = FALSE)
+    stop("Invalid variable supplied to continuous scale !", call. = FALSE)
 
-  var_ <- as.numeric(var_)
+  if (is.character(var_))
+    var_ <- type.convert(var_)
   if (palette %in% c("viridis", "magma", "plasma", "inferno", "cividis")) {
-    colors <- do.call(palette, list(n = 11, direction = direction))
+    colors <- do.call(palette, list(n = n_breaks, direction = direction))
     colors <- substr(colors, 1, 7)
   } else {
     pal <- col_numeric(palette = palette, domain = 0:100, na.color = "#808080")
-    colors <- pal(seq(from = 0, to = 100, by = 10))
+    colors <- pal(seq(from = 20, to = 100, length.out = n_breaks + 1))
     if (direction > 0) {
       colors <- rev(colors)
     }
   }
   if (is.null(range)) {
-    range_col <- seq(from = min(var_, na.rm = TRUE), to = max(var_, na.rm = TRUE), length.out = 11)
+    range_col <- seq(from = min(var_, na.rm = TRUE), to = max(var_, na.rm = TRUE), length.out = n_breaks + 1)
   } else {
-    range_col <- seq(from = range[1], to = range[2], length.out = 11)
+    range_col <- seq(from = range[1], to = range[2], length.out = n_breaks + 1)
   }
   .r2d3map_opt(
     map = map, name = "colors",
     color_type = "continuous",
     color_var = var,
-    range_var = range(var_, na.rm = TRUE),
+    range_var = c(0, max(var_, na.rm = TRUE)),
     range_col = range_col,
-    colors = colors
+    colors = c("#fafafa", colors)
   )
 }
 
@@ -206,6 +209,9 @@ add_tooltip <- function(map, value = "<b>{name}</b><<scale_var>>", as_glue = TRU
 #' @param title Title for the legend.
 #' @param prefix A prefix of legend labels.
 #' @param suffix A suffix of legend labels.
+#' @param d3_format A string passed to \code{d3.format},
+#'  see \url{https://github.com/d3/d3-format}.
+#'  If used \code{prefix} and \code{suffix} are ignored.
 #'
 #' @return A \code{r2d3map} \code{htmlwidget} object.
 #' @export
@@ -216,8 +222,12 @@ add_tooltip <- function(map, value = "<b>{name}</b><<scale_var>>", as_glue = TRU
 #' # todo
 #'
 #' }
-add_legend <- function(map, title = "", prefix = "", suffix = "") {
+add_legend <- function(map, title = "", prefix = "", suffix = "", d3_format = NULL) {
   map$x$options$legend <- TRUE
-  .r2d3map_opt(map, "legend_opts", title = title, prefix = prefix, suffix = suffix)
+  .r2d3map_opt(
+    map, "legend_opts",
+    title = title, prefix = prefix, suffix = suffix,
+    d3_format = d3_format
+  )
 }
 

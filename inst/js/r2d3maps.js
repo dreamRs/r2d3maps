@@ -56,7 +56,7 @@ r2d3.onRender(function(json, svg, width, height, options) {
         if (options.legend) {
           var g = svg.append("g")
             .attr("class", "key")
-            .attr("transform", "translate(30," + (height - 30) + ")");
+            .attr("transform", "translate(10," + (height - 30) + ")");
 
           g.selectAll("rect")
             .data(color.range().map(function(d) {
@@ -73,7 +73,7 @@ r2d3.onRender(function(json, svg, width, height, options) {
 
           g.append("text")
             .attr("class", "caption")
-            .attr("x", -25)
+            .attr("x", 0)
             .attr("y", -6)
             .attr("fill", "#000")
             .attr("text-anchor", "start")
@@ -82,7 +82,13 @@ r2d3.onRender(function(json, svg, width, height, options) {
 
           g.call(d3.axisBottom(x)
               .tickSize(13)
-              .tickFormat(function(x, i) { return options.legend_opts.prefix + x + options.legend_opts.suffix; })
+              .tickFormat(function(x, i) {
+                if (options.legend_opts.d3_format) {
+                  return d3.format(options.legend_opts.d3_format)(x);
+                } else {
+                  return options.legend_opts.prefix + x + options.legend_opts.suffix;
+                }
+              })
               .tickValues(color.domain()))
             .select(".domain")
               .remove();

@@ -5,7 +5,7 @@
 \title{Add continuous scale to a map}
 \usage{
 add_continuous_scale(map, var, palette = "viridis", direction = 1,
-  range = NULL)
+  n_breaks = 5, range = NULL)
 }
 \arguments{
 \item{map}{A \code{r2d3map} \code{htmlwidget} object.}
@@ -17,6 +17,8 @@ add_continuous_scale(map, var, palette = "viridis", direction = 1,
 \item{direction}{Sets the order of colors in the scale.
 If 1, the default, colors are ordered from darkest to lightest.
 If -1, the order of colors is reversed.}
+
+\item{n_breaks}{Number of breaks to cut data.}
 
 \item{range}{Range of data, if \code{NULL} (default) range is calculated from data.
 You can specify custom value, e.g. \code{c(0, 100)} to force palette to go from 0 to 100.}
