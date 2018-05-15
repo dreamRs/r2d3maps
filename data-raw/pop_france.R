@@ -1,5 +1,4 @@
 
-
 #  ------------------------------------------------------------------------
 #
 # Title : French population
@@ -7,7 +6,9 @@
 #  Date : 2018-05-14
 #
 #  ------------------------------------------------------------------------
-# naturalearth data
+
+
+# naturalearth data ----
 
 library( sf )
 library( rnaturalearth )
@@ -16,7 +17,7 @@ fr_dept <- ne_states(country = "france", returnclass = "sf")
 
 
 
-# data.gouv data
+# data.gouv data ----
 # Source data : https://www.data.gouv.fr/fr/datasets/population/
 
 pop_fr <- read.table(
