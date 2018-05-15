@@ -3,3 +3,4 @@
 ^dev$
 ^img
 ^data-raw$
+^\.travis\.yml$
