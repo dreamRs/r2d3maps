@@ -18,3 +18,20 @@
 #' }
 #' @source UNICEF (\url{https://washdata.org})
 "water_africa"
+
+
+
+#' French population by department (in 2014).
+#'
+#'
+#' @format A data frame with 100 rows and 5 variables:
+#' \describe{
+#'   \item{code_departement}{Department's code}
+#'   \item{nom_du_departement}{Name of department}
+#'   \item{population_totale}{Population}
+#'   \item{adm1_code}{Code ADM1 (for join with NaturalEarth data)}
+#'   \item{code_hasc}{Code HASC (for join with NaturalEarth data)}
+#' }
+#' @source data.gouv (\url{https://www.data.gouv.fr/fr/datasets/population/})
+"pop_fr"
+

@@ -1,0 +1,101 @@
+﻿Code région;Nom de la région;Code département;Nom du département;Nombre d'arrondissements;Nombre de cantons;Nombre de communes;Population municipale;Population totale
+84;Auvergne-Rhône-Alpes;01;Ain;4;23;410;626 127;643 309
+32;Hauts-de-France;02;Aisne;5;21;805;539 783;554 040
+84;Auvergne-Rhône-Alpes;03;Allier;3;19;318;343 062;353 262
+93;Provence-Alpes-Côte d'Azur;04;Alpes-de-Haute-Provence;4;15;199;161 588;166 298
+93;Provence-Alpes-Côte d'Azur;05;Hautes-Alpes;2;15;168;139 883;145 213
+93;Provence-Alpes-Côte d'Azur;06;Alpes-Maritimes;2;27;163;1 083 312;1 098 785
+84;Auvergne-Rhône-Alpes;07;Ardèche;3;17;339;322 381;332 051
+44;Grand-Est;08;Ardennes;4;19;457;279 715;287 775
+76;Occitanie;09;Ariège;3;13;332;152 574;158 076
+44;Grand-Est;10;Aube;3;17;431;308 094;316 098
+76;Occitanie;11;Aude;3;19;436;365 478;375 065
+76;Occitanie;12;Aveyron;3;23;286;278 644;289 901
+93;Provence-Alpes-Côte d'Azur;13;Bouches-du-Rhône;4;29;119;2 006 069;2 035 475
+28;Normandie;14;Calvados;4;25;621;691 670;708 407
+84;Auvergne-Rhône-Alpes;15;Cantal;3;15;255;146 618;152 400
+75;Nouvelle-Aquitaine;16;Charente;3;19;394;353 853;366 787
+75;Nouvelle-Aquitaine;17;Charente-Maritime;5;27;469;637 089;656 046
+24;Centre-Val de Loire;18;Cher;3;19;290;310 270;318 590
+75;Nouvelle-Aquitaine;19;Corrèze;3;19;285;241 340;249 684
+94;Corse;2A;Corse-du-Sud;2;11;124;151 652;154 100
+94;Corse;2B;Haute-Corse;3;15;236;172 560;175 499
+27;Bourgogne-Franche-Comté;21;Côte-d'Or;3;23;705;531 380;545 001
+53;Bretagne;22;Côtes-d'Armor;4;27;362;597 397;617 413
+75;Nouvelle-Aquitaine;23;Creuse;2;15;259;120 581;124 948
+75;Nouvelle-Aquitaine;24;Dordogne;4;25;545;416 350;428 651
+27;Bourgogne-Franche-Comté;25;Doubs;3;19;585;534 710;549 155
+84;Auvergne-Rhône-Alpes;26;Drôme;3;19;367;499 159;514 104
+28;Normandie;27;Eure;3;23;617;598 347;616 076
+24;Centre-Val de Loire;28;Eure-et-Loir;4;15;391;433 762;445 083
+53;Bretagne;29;Finistère;4;27;281;905 855;935 393
+76;Occitanie;30;Gard;3;23;353;736 029;752 382
+76;Occitanie;31;Haute-Garonne;3;27;589;1 317 668;1 344 579
+76;Occitanie;32;Gers;3;17;462;190 625;197 988
+75;Nouvelle-Aquitaine;33;Gironde;6;33;540;1 526 016;1 556 663
+76;Occitanie;34;Hérault;3;25;343;1 107 398;1 127 333
+53;Bretagne;35;Ille-et-Vilaine;4;27;351;1 032 240;1 060 051
+24;Centre-Val de Loire;36;Indre;4;13;243;226 175;232 802
+24;Centre-Val de Loire;37;Indre-et-Loire;3;19;277;603 924;619 004
+84;Auvergne-Rhône-Alpes;38;Isère;3;29;526;1 243 597;1 271 938
+27;Bourgogne-Franche-Comté;39;Jura;3;17;528;260 681;270 826
+75;Nouvelle-Aquitaine;40;Landes;2;15;331;400 477;414 090
+24;Centre-Val de Loire;41;Loir-et-Cher;3;15;283;333 567;344 121
+84;Auvergne-Rhône-Alpes;42;Loire;3;21;326;757 305;774 262
+84;Auvergne-Rhône-Alpes;43;Haute-Loire;3;19;258;226 565;234 078
+52;Pays de la Loire;44;Loire-Atlantique;4;31;212;1 346 592;1 382 766
+24;Centre-Val de Loire;45;Loiret;3;21;327;669 737;688 098
+76;Occitanie;46;Lot;3;17;326;173 648;180 016
+75;Nouvelle-Aquitaine;47;Lot-et-Garonne;4;21;319;333 234;343 198
+76;Occitanie;48;Lozère;2;13;176;76 360;80 423
+52;Pays de la Loire;49;Maine-et-Loire;4;21;250;805 888;829 156
+28;Normandie;50;Manche;4;27;516;499 958;518 322
+44;Grand-Est;51;Marne;5;23;617;570 817;584 297
+44;Grand-Est;52;Haute-Marne;3;17;429;180 673;186 698
+52;Pays de la Loire;53;Mayenne;3;17;258;307 471;317 716
+44;Grand-Est;54;Meurthe-et-Moselle;4;23;594;732 153;746 687
+44;Grand-Est;55;Meuse;3;17;501;191 530;197 763
+53;Bretagne;56;Morbihan;3;21;256;741 051;764 338
+44;Grand-Est;57;Moselle;5;27;729;1 045 154;1 065 894
+27;Bourgogne-Franche-Comté;58;Nièvre;4;17;310;213 569;221 048
+32;Hauts-de-France;59;Nord;6;41;648;2 603 472;2 640 622
+32;Hauts-de-France;60;Oise;4;21;690;818 680;838 646
+28;Normandie;61;Orne;3;21;413;287 750;297 109
+32;Hauts-de-France;62;Pas-de-Calais;7;39;893;1 472 589;1 497 668
+84;Auvergne-Rhône-Alpes;63;Puy-de-Dôme;5;31;467;644 216;661 248
+75;Nouvelle-Aquitaine;64;Pyrénées-Atlantiques;3;27;547;667 249;688 451
+76;Occitanie;65;Hautes-Pyrénées;3;17;472;228 950;236 577
+76;Occitanie;66;Pyrénées-Orientales;3;17;226;466 327;474 842
+44;Grand-Est;67;Bas-Rhin;5;23;518;1 112 815;1 131 812
+44;Grand-Est;68;Haut-Rhin;4;17;366;760 134;775 941
+84;Auvergne-Rhône-Alpes;69;Rhône;2;13;285;1 801 885;1 833 002
+27;Bourgogne-Franche-Comté;70;Haute-Saône;2;17;543;238 347;246 022
+27;Bourgogne-Franche-Comté;71;Saône-et-Loire;5;29;570;555 788;574 229
+52;Pays de la Loire;72;Sarthe;3;21;368;568 760;583 961
+84;Auvergne-Rhône-Alpes;73;Savoie;3;19;292;426 924;440 777
+84;Auvergne-Rhône-Alpes;74;Haute-Savoie;4;17;290;783 127;806 447
+11;Île-de-France;75;Paris;1;;1;2 220 445;2 243 739
+28;Normandie;76;Seine-Maritime;3;35;718;1 257 920;1 284 107
+11;Île-de-France;77;Seine-et-Marne;5;23;511;1 377 846;1 400 477
+11;Île-de-France;78;Yvelines;4;21;262;1 421 670;1 449 398
+75;Nouvelle-Aquitaine;79;Deux-Sèvres;3;17;297;373 553;384 655
+32;Hauts-de-France;80;Somme;4;23;782;571 632;583 641
+76;Occitanie;81;Tarn;2;23;320;384 474;396 341
+76;Occitanie;82;Tarn-et-Garonne;2;15;195;252 578;258 696
+93;Provence-Alpes-Côte d'Azur;83;Var;3;23;153;1 038 212;1 055 745
+93;Provence-Alpes-Côte d'Azur;84;Vaucluse;3;17;151;554 374;566 592
+52;Pays de la Loire;85;Vendée;3;17;269;662 122;681 469
+75;Nouvelle-Aquitaine;86;Vienne;3;19;280;433 203;444 347
+75;Nouvelle-Aquitaine;87;Haute-Vienne;3;21;200;376 199;384 708
+44;Grand-Est;88;Vosges;3;17;510;373 560;386 978
+27;Bourgogne-Franche-Comté;89;Yonne;3;21;434;341 814;352 433
+27;Bourgogne-Franche-Comté;90;Territoire de Belfort;1;9;102;144 334;147 647
+11;Île-de-France;91;Essonne;3;21;196;1 268 228;1 286 908
+11;Île-de-France;92;Hauts-de-Seine;3;23;36;1 597 770;1 617 484
+11;Île-de-France;93;Seine-Saint-Denis;3;21;40;1 571 028;1 582 139
+11;Île-de-France;94;Val-de-Marne;3;25;47;1 365 039;1 377 511
+11;Île-de-France;95;Val-d'Oise;3;21;185;1 205 539;1 221 946
+01;Guadeloupe;971;Guadeloupe;2;21;32;400 186;406 706
+02;Martinique;972;Martinique;4;;34;383 911;390 252
+03;Guyane;973;Guyane;2;;22;252 338;254 845
+04;La Réunion;974;La Réunion;4;25;24;842 767;852 657
