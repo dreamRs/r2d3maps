@@ -4,7 +4,8 @@
 \alias{add_tooltip}
 \title{Add a tooltip on a map}
 \usage{
-add_tooltip(map, value = "<b>{name}</b><<scale_var>>", as_glue = TRUE)
+add_tooltip(map, value = "<b>{name}</b><<scale_var>>", as_glue = TRUE,
+  .na = "no data")
 }
 \arguments{
 \item{map}{A \code{r2d3map} \code{htmlwidget} object.}
@@ -13,6 +14,9 @@ add_tooltip(map, value = "<b>{name}</b><<scale_var>>", as_glue = TRUE)
 
 \item{as_glue}{Use a \code{glue} string, if \code{FALSE}
 you can pass a character vector as tooltip.}
+
+\item{.na}{Value to replace NA values with (if \code{value} is a \code{glue} string).
+Use \code{NULL} to don't display tooltip if there is NAs.}
 }
 \value{
 A \code{r2d3map} \code{htmlwidget} object.

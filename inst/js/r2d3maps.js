@@ -45,7 +45,45 @@ r2d3.onRender(function(json, svg, width, height, options) {
   // continuous colors
   if (options !== null) {
     if (typeof options.colors != 'undefined') {
+
+      if (options.colors.color_type == 'discrete') {
+
+        var ordinal = d3.scaleOrdinal()
+          .domain(options.colors.values)
+          .range(options.colors.colors);
+        svg.append("g")
+            .attr("class", "feature")
+            .selectAll("path")
+            .data(topojson.feature(json, json.objects.states).features)
+            .enter().append("path")
+              .attr("fill", function(d) { return ordinal(d.properties[options.colors.color_var]); })
+              .attr("d", path);
+
+
+        if (options.legend) {
+          // Legend
+          var gd = svg.append("g")
+              .attr("class", "legendThreshold")
+              .attr("transform", "translate(10," + (height/2) + ")");
+          gd.append("text")
+              .attr("class", "caption")
+              .attr("x", 0)
+              .attr("y", -6)
+              .text(options.legend_opts.title);
+          var legend = d3.legendColor()
+              .orient("vertical")
+              .labels(function (d) { return options.colors.values[d.i]; })
+              .cellFilter(function (d) { if (typeof d.label === 'undefined') { return false; } else { return true; } })
+              .shapePadding(4)
+              .scale(ordinal);
+          svg.select(".legendThreshold")
+              .call(legend);
+        }
+
+      }
+
       if (options.colors.color_type == 'continuous') {
+
         var x = d3.scaleLinear()
                   .range([1, 200])
                   .domain(options.colors.range_var);
@@ -105,7 +143,9 @@ r2d3.onRender(function(json, svg, width, height, options) {
 
 
       }
+
     } else {
+
       svg.append("g")
             .attr("class", "feature")
             .selectAll("path")
@@ -113,28 +153,37 @@ r2d3.onRender(function(json, svg, width, height, options) {
             .enter().append("path")
               .attr("fill", "#5f799c")
               .attr("d", path);
+
     }
+
   } else {
+
     svg.append("path")
       .datum(states)
       .attr("class", "feature")
       .attr("d", path);
+
   }
 
   if (options !== null) {
+
     if (options.tooltip) {
+
       svg.selectAll("path")
             //.data(options.data)
             //.enter().append("path")
             //.attr("d", path)
             .on("mouseover", function(d, i) {
                   d3.select(this).attr("opacity", 0.5);
-                  div.transition()
+                  // console.log(options.tooltip_value[i]);
+                  if (options.tooltip_value[i] !== null) {
+                    div.transition()
                       .duration(200)
                       .style("opacity", 0.9);
-                  div.html(options.tooltip_value[i])
+                    div.html(options.tooltip_value[i])
                       .style("left", (d3.event.pageX) + "px")
                       .style("top", (d3.event.pageY - 28) + "px");
+                  }
                 })
             .on("mouseout", function(d) {
                     d3.select(this).attr("opacity", 1);

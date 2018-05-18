@@ -12,7 +12,7 @@ add_continuous_scale(map, var, palette = "viridis", direction = 1,
 
 \item{var}{Variable to map.}
 
-\item{palette}{Color palette}
+\item{palette}{Color palette, you can use Viridis or Brewer color palette.}
 
 \item{direction}{Sets the order of colors in the scale.
 If 1, the default, colors are ordered from darkest to lightest.
