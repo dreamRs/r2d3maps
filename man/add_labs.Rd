@@ -4,12 +4,14 @@
 \alias{add_labs}
 \title{Labs for a r2d3 map}
 \usage{
-add_labs(map, title = NULL)
+add_labs(map, title = NULL, caption = NULL)
 }
 \arguments{
 \item{map}{A \code{r2d3map} \code{htmlwidget} object.}
 
 \item{title}{The map title.}
+
+\item{caption}{Brief explanation of the source of the data.}
 }
 \value{
 A \code{r2d3map} \code{htmlwidget} object.

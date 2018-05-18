@@ -161,6 +161,16 @@ r2d3.onRender(function(json, svg, width, height, options) {
             .attr("font-weight", "bold")
             .text(options.labs.title);
       }
+      if (typeof options.labs.caption != 'undefined') {
+        svg.append("text")
+          .attr("class", "caption")
+          .attr("x", width)
+          .attr("y", height-5)
+          //.attr("startOffset", "100%")
+          .attr("text-anchor", "end")
+          .attr("font-size", "90%")
+          .text(options.labs.caption);
+      }
     } else {
       //console.log("nope");
     }

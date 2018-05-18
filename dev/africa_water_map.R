@@ -47,7 +47,7 @@ map_africa <- r2d3map(shape = africa) %>%
   add_continuous_scale(var = "national_at_least_basic", range = c(0, 100)) %>%
   add_tooltip(value = "<b>{name}</b>: {national_at_least_basic}%") %>%
   add_legend(title = "Population with at least basic access", suffix = "%") %>%
-  add_labs(title = "Drinking water in Africa")
+  add_labs(title = "Drinking water in Africa", caption = "Data: https://washdata.org/")
 
 map_africa
 

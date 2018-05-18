@@ -79,6 +79,7 @@ r2d3map <- function(shape, projection = "Mercator", width = NULL, height = NULL)
 #'
 #' @param map A \code{r2d3map} \code{htmlwidget} object.
 #' @param title The map title.
+#' @param caption Brief explanation of the source of the data.
 #'
 #' @return A \code{r2d3map} \code{htmlwidget} object.
 #' @export
@@ -89,8 +90,8 @@ r2d3map <- function(shape, projection = "Mercator", width = NULL, height = NULL)
 #' # todo
 #'
 #' }
-add_labs <- function(map, title = NULL) {
-  .r2d3map_opt(map, "labs", title = title)
+add_labs <- function(map, title = NULL, caption = NULL) {
+  .r2d3map_opt(map, "labs", title = title, caption = caption)
 }
 
 
