@@ -44,6 +44,10 @@ r2d3map(shape = fr_dept) %>%
   add_labs(title = "France population")
 
 
-
+r2d3map(shape = fr_dept) %>%
+  add_continuous_scale(var = "population_totale", palette = "viridis", n_breaks = 7) %>%
+  add_tooltip(value = "<b>{nom_du_departement}</b>: {population_totale}") %>%
+  add_legend(title = "Population", d3_format = ".2s") %>%
+  add_labs(title = "France population")
 
 

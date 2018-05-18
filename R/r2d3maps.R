@@ -109,8 +109,7 @@ add_labs <- function(map, title = NULL) {
 #'
 #' @export
 #'
-#' @importFrom viridisLite viridis magma plasma inferno cividis
-#' @importFrom scales col_numeric
+#' @importFrom scales col_numeric viridis_pal
 #' @importFrom utils type.convert
 #'
 #' @examples
@@ -137,7 +136,7 @@ add_continuous_scale <- function(map, var, palette = "viridis", direction = 1,
   if (is.character(var_))
     var_ <- type.convert(var_)
   if (palette %in% c("viridis", "magma", "plasma", "inferno", "cividis")) {
-    colors <- do.call(palette, list(n = n_breaks, direction = direction))
+    colors <- viridis_pal(option = palette, direction = direction)(n_breaks)
     colors <- substr(colors, 1, 7)
   } else {
     pal <- col_numeric(palette = palette, domain = 0:100, na.color = "#808080")

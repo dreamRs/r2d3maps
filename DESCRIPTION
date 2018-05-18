@@ -17,7 +17,6 @@ Imports:
     r2d3,
     htmltools,
     geojsonio,
-    viridisLite,
     scales,
     glue,
     magrittr
