@@ -3,6 +3,7 @@
 export("%>%")
 export(add_continuous_scale)
 export(add_discrete_scale)
+export(add_discrete_scale2)
 export(add_labs)
 export(add_legend)
 export(add_tooltip)

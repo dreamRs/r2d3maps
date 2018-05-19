@@ -19,9 +19,26 @@ r2d3map(shape, projection = "Mercator", width = NULL, height = NULL)
 Create a map in D3
 }
 \examples{
-\dontrun{
+library( sf )
+library( rnaturalearth )
+library( r2d3maps )
 
-# todo
+# Hello world!
+world <- st_as_sf(countries110)
+r2d3map(shape = world)
 
-}
+# Brazil!
+brazil <- ne_states(country = "brazil", returnclass = "sf")
+r2d3map(shape = brazil)
+
+# Italy!
+italy <- ne_states(country = "italy", returnclass = "sf")
+r2d3map(shape = italy)
+
+# Oceania!
+oceania <- ne_countries(continent = "oceania", returnclass = "sf")
+oceania <- sf::st_crop(oceania, xmin = 112, ymin = -56, xmax = 194, ymax = 12)
+r2d3map(shape = oceania) \%>\%
+  add_tooltip()
+
 }

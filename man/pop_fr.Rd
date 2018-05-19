@@ -3,7 +3,7 @@
 \docType{data}
 \name{pop_fr}
 \alias{pop_fr}
-\title{French population by department (in 2014).}
+\title{French population by county (in 2014).}
 \format{A data frame with 100 rows and 5 variables:
 \describe{
   \item{code_departement}{County code}
@@ -19,6 +19,6 @@ data.gouv (\url{https://www.data.gouv.fr/fr/datasets/population/})
 pop_fr
 }
 \description{
-French population by department (in 2014).
+French population by county (in 2014).
 }
 \keyword{datasets}

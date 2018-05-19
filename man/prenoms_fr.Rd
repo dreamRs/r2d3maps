@@ -3,7 +3,7 @@
 \docType{data}
 \name{prenoms_fr}
 \alias{prenoms_fr}
-\title{Most popular first names in France.}
+\title{Most popular first names in France (1988-2016).}
 \format{A data frame with 5684 rows and 7 variables:
 \describe{
   \item{dpt}{County code}
@@ -22,7 +22,7 @@ prenoms_fr
 }
 \description{
 First names most attributed to children born in France
-(mainland France and Dom) between 1900 and 2016 and the
+(mainland France and Dom) between 1988 and 2016 and the
 number of children by sex associated with each first name.
 }
 \keyword{datasets}

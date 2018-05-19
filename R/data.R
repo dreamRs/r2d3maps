@@ -21,7 +21,7 @@
 
 
 
-#' French population by department (in 2014).
+#' French population by county (in 2014).
 #'
 #'
 #' @format A data frame with 100 rows and 5 variables:
@@ -37,10 +37,10 @@
 
 
 
-#' Most popular first names in France.
+#' Most popular first names in France (1988-2016).
 #'
 #' First names most attributed to children born in France
-#' (mainland France and Dom) between 1900 and 2016 and the
+#' (mainland France and Dom) between 1988 and 2016 and the
 #' number of children by sex associated with each first name.
 #'
 #' @format A data frame with 5684 rows and 7 variables:

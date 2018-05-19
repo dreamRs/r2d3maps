@@ -27,9 +27,33 @@ You can specify custom value, e.g. \code{c(0, 100)} to force palette to go from 
 Add continuous scale to a map
 }
 \examples{
-\dontrun{
+library( r2d3maps )
+library( rnaturalearth )
 
-# todo
+# data
+tunisia <- ne_states(country = "tunisia", returnclass = "sf")
 
-}
+# fake percentage
+tunisia$p <- sample.int(100, nrow(tunisia))
+
+# fake continuous var
+tunisia$foo <- sample.int(1e5, nrow(tunisia))
+
+
+# Tunisia
+r2d3map(shape = tunisia) \%>\%
+  add_continuous_scale(var = "p")
+
+# different color palette
+r2d3map(shape = tunisia) \%>\%
+  add_continuous_scale(var = "p", palette = "Greens")
+
+# legend
+r2d3map(shape = tunisia) \%>\%
+  add_continuous_scale(var = "p",
+                       palette = "inferno",
+                       direction = -1,
+                       range = c(0, 100)) \%>\%
+  add_legend(title = "Percentage", suffix = "\%")
+
 }

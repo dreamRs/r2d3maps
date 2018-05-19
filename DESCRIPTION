@@ -20,5 +20,6 @@ Imports:
     scales,
     glue,
     magrittr
+Suggests: rnaturalearth, sf
 RoxygenNote: 6.0.1
 Remotes: rstudio/r2d3

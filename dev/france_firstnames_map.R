@@ -92,3 +92,24 @@ r2d3map(shape = fr_dept) %>%
   )
 
 
+r2d3map(shape = fr_dept) %>%
+  add_discrete_scale2(
+    var = "prenom",
+    values = list(
+      "ELODIE" = "indianred",
+      "JULIE" = "cornflowerblue",
+      "LAURA" = "gold",
+      "MARION" = "mediumpurple",
+      "AUTRE" = "grey",
+      "AURÉLIE" = "forestgreen"
+    )
+  ) %>%
+  add_tooltip(value = "<b>{name}</b>: {prenom}", .na = NULL) %>%
+  add_legend(title = "Prénoms") %>%
+  add_labs(
+    title = "Prénoms féminins les plus attribués en 1989",
+    caption = "Data: Insee"
+  )
+
+
+
