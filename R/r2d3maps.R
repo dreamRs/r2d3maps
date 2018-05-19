@@ -71,10 +71,10 @@ r2d3map <- function(shape, projection = "Mercator", width = NULL, height = NULL)
     #     script = "d3-legend.min.js"
     #   )
     # ),
-    script = system.file("js/r2d3maps.js", package = "r2d3maps"),
+    script = system.file("js/r2d3maps2.js", package = "r2d3maps"),
     options = list(
       data = data, projection = projection,
-      tooltip = FALSE, legend = FALSE
+      tooltip = FALSE, legend = FALSE, zoom = FALSE
     )
   )
   map$dependencies <- rev(map$dependencies)
@@ -364,6 +364,44 @@ add_tooltip <- function(map, value = "<b>{name}</b><<scale_var>>", as_glue = TRU
   }
   map$x$options$tooltip_value <- tooltip
   map$x$options$tooltip <- TRUE
+  return(map)
+}
+
+
+
+#' Add zoom capacity
+#'
+#' @param map A \code{r2d3map} \code{htmlwidget} object.
+#' @param enabled Logical, enable zooming.
+#' @param type Type of zoom: \code{"click"} for zooming to clicked polygon,
+#'  or \code{"wheel"} for zooming with mouse wheel. Both can be supplied.
+#'
+#' @note Zoom with mousewheel doesn't work in RStudio viewer.
+#' Zooming can be slow for a map with lot of polygons.
+#'
+#' @export
+#'
+#' @examples
+#' library( r2d3maps )
+#' library( rnaturalearth )
+#'
+#'
+#' turkey <- ne_states(country = "turkey", returnclass = "sf")
+#' r2d3map(shape = turkey)
+#'
+#' # zoom with click
+#' r2d3map(shape = turkey) %>% add_zoom()
+#'
+#' # zoom with mousewheel (open in browser)
+#' r2d3map(shape = turkey) %>% add_zoom(type = "wheel")
+#'
+add_zoom <- function(map, enabled = TRUE, type = "click") {
+  type <- match.arg(type, c("click", "wheel"), TRUE)
+  map$x$options$zoom <- enabled
+  map$x$options$zoom_opts <- list(
+    click = "click" %in% type,
+    wheel = "wheel" %in% type
+  )
   return(map)
 }
 
