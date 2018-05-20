@@ -74,7 +74,8 @@ r2d3map <- function(shape, projection = "Mercator", width = NULL, height = NULL)
     script = system.file("js/r2d3maps2.js", package = "r2d3maps"),
     options = list(
       data = data, projection = projection,
-      tooltip = FALSE, legend = FALSE, zoom = FALSE
+      tooltip = FALSE, legend = FALSE,
+      zoom = FALSE, shiny = FALSE
     )
   )
   map$dependencies <- rev(map$dependencies)
@@ -434,4 +435,84 @@ add_legend <- function(map, title = "", prefix = "", suffix = "", d3_format = NU
     d3_format = d3_format
   )
 }
+
+
+
+
+
+#' Retrieve click in Shiny
+#'
+#' @param map A \code{r2d3map} \code{htmlwidget} object.
+#' @param inputId The \code{input} slot that will be used to access the value.
+#' @param layerId Name of a variable present in data to filter results returned,
+#' if \code{NULL} (default) all columns are returned.
+#' @param action What triggers input value server-side, \code{click} or \code{dblclick}.
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' library( r2d3maps )
+#' library( r2d3 )
+#' library( rnaturalearth )
+#' library( shiny )
+#'
+#' france <- ne_states(country = "france", returnclass = "sf")
+#' france <- france[france$type_en %in% "Metropolitan department", ]
+#'
+#' if (interactive()) {
+#'   ui <- fluidPage(
+#'
+#'     fluidRow(
+#'       column(
+#'         offset = 2, width = 8,
+#'         tags$h2("r2d3maps Shiny example"),
+#'         fluidRow(
+#'           column(
+#'             width = 6,
+#'             d3Output(outputId = "map")
+#'           ),
+#'           column(
+#'             width = 6,
+#'             verbatimTextOutput(outputId = "res_click")
+#'           )
+#'         )
+#'       )
+#'     )
+#'
+#'   )
+#'
+#'   server <- function(input, output, session) {
+#'
+#'     output$map <- renderD3({
+#'       r2d3map(shape = france) %>%
+#'         add_tooltip() %>%
+#'         add_click(
+#'           inputId = "myclick",
+#'           layerId = "name", # return only name,
+#'           # NULL to get all data
+#'           action = "dblclick" # on double click,
+#'           # use "click" for simple click
+#'         )
+#'     })
+#'
+#'     output$res_click <- renderPrint({
+#'       str(input$myclick, max.level = 2)
+#'     })
+#'   }
+#'
+#'   shinyApp(ui, server)
+#' }
+#' }
+add_click <- function(map, inputId, layerId = NULL, action = "click") {
+  action <- match.arg(action, c("click", "dblclick"))
+  map$x$options$shiny <- TRUE
+  .r2d3map_opt(
+    map, "shiny_opts",
+    inputId = inputId,
+    layerId = layerId,
+    action = action
+  )
+}
+
 

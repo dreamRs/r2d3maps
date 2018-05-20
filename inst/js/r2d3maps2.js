@@ -220,6 +220,19 @@ r2d3.onRender(function(json, svg, width, height, options) {
       }
     }
 
+    // Shiny interaction
+    if (options.shiny) {
+      if (HTMLWidgets.shinyMode) {
+        map.on(options.shiny_opts.action, function(d) {
+          if (options.shiny_opts.layerId) {
+            Shiny.onInputChange(options.shiny_opts.inputId, d.properties[options.shiny_opts.layerId]);
+          } else {
+            Shiny.onInputChange(options.shiny_opts.inputId, d.properties);
+          }
+        });
+      }
+    }
+
     if (options.tooltip) {
 
       // Tooltip
