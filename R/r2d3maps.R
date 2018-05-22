@@ -134,14 +134,14 @@ add_labs <- function(map, title = NULL, caption = NULL) {
 #' @param direction Sets the order of colors in the scale.
 #'  If 1, the default, colors are ordered from darkest to lightest.
 #'  If -1, the order of colors is reversed.
-#' @param n_breaks Number of breaks to cut data.
-#' @param range Range of data, if \code{NULL} (default) range is calculated from data.
-#' You can specify custom value, e.g. \code{c(0, 100)} to force palette to go from 0 to 100.
+#' @param n_breaks Number of breaks to cut data (depending on \code{style}, number of breaks can be re-computed).
+#' @param style Style for computing breaks, see \code{\link[classInt]{classIntervals}}.
 #'
 #' @export
 #'
 #' @importFrom scales col_numeric viridis_pal
 #' @importFrom utils type.convert
+#' @importFrom classInt classIntervals
 #'
 #' @examples
 #' library( r2d3maps )
@@ -169,12 +169,38 @@ add_labs <- function(map, title = NULL, caption = NULL) {
 #' d3_map(shape = tunisia) %>%
 #'   add_continuous_scale(var = "p",
 #'                        palette = "inferno",
-#'                        direction = -1,
-#'                        range = c(0, 100)) %>%
+#'                        direction = -1) %>%
 #'   add_legend(title = "Percentage", suffix = "%")
 #'
+#'
+#'
+#' # different style of breaks
+#'
+#' # equal
+#' d3_map(shape = tunisia) %>%
+#'   add_continuous_scale(var = "foo",
+#'                        palette = "inferno",
+#'                        direction = -1,
+#'                        style = "equal") %>%
+#'   add_legend(title = "foo", d3_format = ".0f")
+#'
+#' # quantile
+#' d3_map(shape = tunisia) %>%
+#'   add_continuous_scale(var = "foo",
+#'                        palette = "inferno",
+#'                        direction = -1,
+#'                        style = "quantile") %>%
+#'   add_legend(title = "foo", d3_format = ".0f")
+#'
+#' # pretty
+#' d3_map(shape = tunisia) %>%
+#'   add_continuous_scale(var = "foo",
+#'                        palette = "inferno",
+#'                        direction = -1,
+#'                        style = "pretty") %>%
+#'   add_legend(title = "foo", d3_format = ".0f")
 add_continuous_scale <- function(map, var, palette = "viridis", direction = 1,
-                                 n_breaks = 5, range = NULL) {
+                                 n_breaks = 5, style = "pretty") {
   palette <- match.arg(
     arg = palette,
     choices = c("viridis", "magma", "plasma", "inferno", "cividis",
@@ -190,6 +216,10 @@ add_continuous_scale <- function(map, var, palette = "viridis", direction = 1,
 
   if (is.character(var_))
     var_ <- type.convert(var_)
+  if (!is.numeric(var_))
+    stop("'var' must be a numeric vector!", call. = FALSE)
+  range_col <- classIntervals(var = var_, n = n_breaks, style = style)$brks
+  n_breaks <- length(range_col) - 1
   if (palette %in% c("viridis", "magma", "plasma", "inferno", "cividis")) {
     colors <- viridis_pal(option = palette, direction = direction)(n_breaks)
     colors <- substr(colors, 1, 7)
@@ -199,11 +229,6 @@ add_continuous_scale <- function(map, var, palette = "viridis", direction = 1,
     if (direction > 0) {
       colors <- rev(colors)
     }
-  }
-  if (is.null(range)) {
-    range_col <- seq(from = min(var_, na.rm = TRUE), to = max(var_, na.rm = TRUE), length.out = n_breaks + 1)
-  } else {
-    range_col <- seq(from = range[1], to = range[2], length.out = n_breaks + 1)
   }
   .r2d3map_opt(
     map = map, name = "colors",
@@ -331,7 +356,7 @@ add_discrete_scale2 <- function(map, var, values, na.color = "#D8D8D8") {
 #' Add a tooltip on a map
 #'
 #' @param map A \code{r2d3map} \code{htmlwidget} object.
-#' @param value A \code{glue} string matching vars in \code{data}.
+#' @param value A \code{formula} or a \code{glue} string matching columns in \code{data}.
 #' @param as_glue Use a \code{glue} string, if \code{FALSE}
 #'  you can pass a character vector as tooltip.
 #' @param .na Value to replace NA values with (if \code{value} is a \code{glue} string).
@@ -341,27 +366,43 @@ add_discrete_scale2 <- function(map, var, values, na.color = "#D8D8D8") {
 #' @export
 #'
 #' @importFrom glue glue glue_data
+#' @importFrom stats model.frame
 #'
 #' @examples
-#' \dontrun{
+#' library( r2d3maps )
+#' library( rnaturalearth )
 #'
-#' # todo
+#' belgium <- ne_states(country = "belgium", returnclass = "sf")
 #'
-#' }
+#' # default
+#' d3_map(shape = belgium) %>%
+#'   add_tooltip()
+#'
+#' # glue
+#' d3_map(shape = belgium) %>%
+#'   add_tooltip(value = "{name} ({gn_name})")
+#'
+#' # formula
+#' d3_map(shape = belgium) %>%
+#'   add_tooltip(value = ~paste0(name, " (", gn_name, ")"))
 add_tooltip <- function(map, value = "<b>{name}</b><<scale_var>>", as_glue = TRUE, .na = "no data") {
   if (is.null(map$x$options$data))
     stop("No data !", call. = FALSE)
-  if (as_glue) {
-    var <- map$x$options$colors$color_var
-    if (is.null(var)) {
-      var <- ""
-    } else {
-      var <- paste0(": {", var, "}")
-    }
-    tooltip <- glue(value, scale_var = var, .open = "<<", .close = ">>")
-    tooltip <- glue_data(tooltip, .x = map$x$options$data, .na = .na)
+  if (inherits(x = value, what = "formula")) {
+    tooltip <- model.frame(formula = value, data = map$x$options$data)[[1]]
   } else {
-    tooltip <- value
+    if (as_glue) {
+      var <- map$x$options$colors$color_var
+      if (is.null(var)) {
+        var <- ""
+      } else {
+        var <- paste0(": {", var, "}")
+      }
+      tooltip <- glue(value, scale_var = var, .open = "<<", .close = ">>")
+      tooltip <- glue_data(tooltip, .x = map$x$options$data, .na = .na)
+    } else {
+      tooltip <- value
+    }
   }
   map$x$options$tooltip_value <- tooltip
   map$x$options$tooltip <- TRUE

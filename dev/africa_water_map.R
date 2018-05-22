@@ -44,7 +44,7 @@ africa$national_at_least_basic <- round(africa$national_at_least_basic)
 # Map ---------------------------------------------------------------------
 
 map_africa <- d3_map(shape = africa) %>%
-  add_continuous_scale(var = "national_at_least_basic", range = c(0, 100)) %>%
+  add_continuous_scale(var = "national_at_least_basic") %>%
   add_tooltip(value = "<b>{name}</b>: {national_at_least_basic}%") %>%
   add_legend(title = "Population with at least basic access", suffix = "%") %>%
   add_labs(title = "Drinking water in Africa", caption = "Data: https://washdata.org/")

@@ -5,7 +5,7 @@
 \title{Add continuous scale to a map}
 \usage{
 add_continuous_scale(map, var, palette = "viridis", direction = 1,
-  n_breaks = 5, range = NULL)
+  n_breaks = 5, style = "pretty")
 }
 \arguments{
 \item{map}{A \code{r2d3map} \code{htmlwidget} object.}
@@ -18,10 +18,9 @@ add_continuous_scale(map, var, palette = "viridis", direction = 1,
 If 1, the default, colors are ordered from darkest to lightest.
 If -1, the order of colors is reversed.}
 
-\item{n_breaks}{Number of breaks to cut data.}
+\item{n_breaks}{Number of breaks to cut data (depending on \code{style}, number of breaks can be re-computed).}
 
-\item{range}{Range of data, if \code{NULL} (default) range is calculated from data.
-You can specify custom value, e.g. \code{c(0, 100)} to force palette to go from 0 to 100.}
+\item{style}{Style for computing breaks, see \code{\link[classInt]{classIntervals}}.}
 }
 \description{
 Add continuous scale to a map
@@ -52,8 +51,34 @@ d3_map(shape = tunisia) \%>\%
 d3_map(shape = tunisia) \%>\%
   add_continuous_scale(var = "p",
                        palette = "inferno",
-                       direction = -1,
-                       range = c(0, 100)) \%>\%
+                       direction = -1) \%>\%
   add_legend(title = "Percentage", suffix = "\%")
 
+
+
+# different style of breaks
+
+# equal
+d3_map(shape = tunisia) \%>\%
+  add_continuous_scale(var = "foo",
+                       palette = "inferno",
+                       direction = -1,
+                       style = "equal") \%>\%
+  add_legend(title = "foo", d3_format = ".0f")
+
+# quantile
+d3_map(shape = tunisia) \%>\%
+  add_continuous_scale(var = "foo",
+                       palette = "inferno",
+                       direction = -1,
+                       style = "quantile") \%>\%
+  add_legend(title = "foo", d3_format = ".0f")
+
+# pretty
+d3_map(shape = tunisia) \%>\%
+  add_continuous_scale(var = "foo",
+                       palette = "inferno",
+                       direction = -1,
+                       style = "pretty") \%>\%
+  add_legend(title = "foo", d3_format = ".0f")
 }

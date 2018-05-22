@@ -10,7 +10,7 @@ add_tooltip(map, value = "<b>{name}</b><<scale_var>>", as_glue = TRUE,
 \arguments{
 \item{map}{A \code{r2d3map} \code{htmlwidget} object.}
 
-\item{value}{A \code{glue} string matching vars in \code{data}.}
+\item{value}{A \code{formula} or a \code{glue} string matching columns in \code{data}.}
 
 \item{as_glue}{Use a \code{glue} string, if \code{FALSE}
 you can pass a character vector as tooltip.}
@@ -25,9 +25,20 @@ A \code{r2d3map} \code{htmlwidget} object.
 Add a tooltip on a map
 }
 \examples{
-\dontrun{
+library( r2d3maps )
+library( rnaturalearth )
 
-# todo
+belgium <- ne_states(country = "belgium", returnclass = "sf")
 
-}
+# default
+d3_map(shape = belgium) \%>\%
+  add_tooltip()
+
+# glue
+d3_map(shape = belgium) \%>\%
+  add_tooltip(value = "{name} ({gn_name})")
+
+# formula
+d3_map(shape = belgium) \%>\%
+  add_tooltip(value = ~paste0(name, " (", gn_name, ")"))
 }
