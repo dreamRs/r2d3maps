@@ -30,7 +30,7 @@ bay_area
 
 # D3 map ------------------------------------------------------------------
 
-r2d3map(shape = bay_area) %>%
+d3_map(shape = bay_area) %>%
   add_labs(title = "Bay Area") %>%
   add_tooltip(value = "{po_name}")
 

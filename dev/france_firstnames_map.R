@@ -43,7 +43,7 @@ fr_dept <- left_join(
 
 
 # map
-r2d3map(shape = fr_dept) %>%
+d3_map(shape = fr_dept) %>%
   add_discrete_scale(var = "prenom", palette = "viridis") %>%
   add_tooltip(value = "<b>{name}</b>: {prenom}", .na = NULL) %>%
   add_legend(title = "Prénoms") %>%
@@ -82,7 +82,7 @@ fr_dept <- left_join(
 
 
 # map
-r2d3map(shape = fr_dept) %>%
+d3_map(shape = fr_dept) %>%
   add_discrete_scale(var = "prenom", palette = "viridis") %>%
   add_tooltip(value = "<b>{name}</b>: {prenom}", .na = NULL) %>%
   add_legend(title = "Prénoms") %>%
@@ -92,7 +92,7 @@ r2d3map(shape = fr_dept) %>%
   )
 
 
-r2d3map(shape = fr_dept) %>%
+d3_map(shape = fr_dept) %>%
   add_discrete_scale2(
     var = "prenom",
     values = list(

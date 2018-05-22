@@ -54,7 +54,7 @@ if (interactive()) {
   server <- function(input, output, session) {
 
     output$map <- renderD3({
-      r2d3map(shape = france) \%>\%
+      d3_map(shape = france) \%>\%
         add_tooltip() \%>\%
         add_click(
           inputId = "myclick",

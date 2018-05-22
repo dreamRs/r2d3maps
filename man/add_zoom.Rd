@@ -27,12 +27,12 @@ library( rnaturalearth )
 
 
 turkey <- ne_states(country = "turkey", returnclass = "sf")
-r2d3map(shape = turkey)
+d3_map(shape = turkey)
 
 # zoom with click
-r2d3map(shape = turkey) \%>\% add_zoom()
+d3_map(shape = turkey) \%>\% add_zoom()
 
 # zoom with mousewheel (open in browser)
-r2d3map(shape = turkey) \%>\% add_zoom(type = "wheel")
+d3_map(shape = turkey) \%>\% add_zoom(type = "wheel")
 
 }

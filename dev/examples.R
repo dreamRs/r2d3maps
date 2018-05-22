@@ -24,31 +24,31 @@ library( dplyr )
 fr_dept <- ne_states(country = "france", returnclass = "sf")
 fr_dept <- fr_dept[fr_dept$type_en %in% "Metropolitan department", ]
 
-r2d3map(shape = fr_dept) %>%
+d3_map(shape = fr_dept) %>%
   add_labs(title = "France")
 
 
 ### Africa
 africa <- ne_countries(continent = "Africa", returnclass = "sf")
-r2d3map(shape = africa) %>%
+d3_map(shape = africa) %>%
   add_labs(title = "Africa")
 
 ### South America
 south_america <- ne_countries(continent = "south america", returnclass = "sf")
-r2d3map(shape = south_america) %>%
+d3_map(shape = south_america) %>%
   add_labs(title = "South America")
 
 
 ### Japan
 japan <- ne_states(country = "japan", returnclass = "sf")
-r2d3map(shape = japan) %>%
+d3_map(shape = japan) %>%
   add_labs(title = "Japan")
 
 
 ### New Zealand
 nz <- ne_states(country = "New Zealand", returnclass = "sf")
 nz <- sf::st_crop(nz, xmin = 159.104, ymin = -48.385, xmax = 193.601, ymax = -33.669)
-r2d3map(shape = nz) %>%
+d3_map(shape = nz) %>%
   add_labs(title = "New Zealand")
 
 
@@ -61,11 +61,11 @@ fr_dept <- fr_dept %>%
   mutate(foo_col = sample.int(n = 200, size = n(), replace = TRUE))
 
 
-r2d3map(shape = fr_dept) %>%
+d3_map(shape = fr_dept) %>%
   add_continuous_scale(var = "foo_col") %>%
   add_labs(title = "France")
 
-r2d3map(shape = fr_dept) %>%
+d3_map(shape = fr_dept) %>%
   add_continuous_scale(var = "foo_col", palette = "Blues") %>%
   add_labs(title = "France")
 
@@ -77,11 +77,11 @@ r2d3map(shape = fr_dept) %>%
 # Tooltip -----------------------------------------------------------------
 
 # simple
-r2d3map(shape = africa) %>%
+d3_map(shape = africa) %>%
   add_tooltip(value = "{name}")
 
 
-r2d3map(shape = fr_dept) %>%
+d3_map(shape = fr_dept) %>%
   add_continuous_scale(var = "foo_col") %>%
   add_tooltip() %>%
   add_labs(title = "France")
@@ -89,7 +89,7 @@ r2d3map(shape = fr_dept) %>%
 
 ### Tunisia
 tunisia <- ne_states(country = "tunisia", returnclass = "sf")
-r2d3map(shape = tunisia) %>%
+d3_map(shape = tunisia) %>%
   add_tooltip(value = "{woe_name}") %>%
   add_labs(title = "Tunisia")
 
@@ -97,7 +97,7 @@ r2d3map(shape = tunisia) %>%
 
 # Legend ------------------------------------------------------------------
 
-r2d3map(shape = fr_dept) %>%
+d3_map(shape = fr_dept) %>%
   add_continuous_scale(var = "foo_col", range = c(0, 200)) %>%
   add_tooltip() %>%
   add_legend(title = "Random data") %>%

@@ -32,14 +32,14 @@ library( rnaturalearth )
 
 ### Japan
 japan <- ne_states(country = "japan", returnclass = "sf")
-r2d3map(shape = japan) %>%
+d3_map(shape = japan) %>%
   add_labs(title = "Japan")
 
 
 ### New Zealand
 nz <- ne_states(country = "New Zealand", returnclass = "sf")
 nz <- sf::st_crop(nz, xmin = 159.104, ymin = -48.385, xmax = 193.601, ymax = -33.669)
-r2d3map(shape = nz) %>%
+d3_map(shape = nz) %>%
   add_labs(title = "New Zealand")
 ```
 
@@ -54,7 +54,7 @@ library( rnaturalearth )
 
 ### South America
 south_america <- ne_countries(continent = "south america", returnclass = "sf")
-r2d3map(shape = south_america) %>%
+d3_map(shape = south_america) %>%
   add_labs(title = "South America")
 
 
@@ -62,7 +62,7 @@ r2d3map(shape = south_america) %>%
 fr_dept <- ne_states(country = "france", returnclass = "sf")
 fr_dept <- fr_dept[fr_dept$type_en %in% "Metropolitan department", ]
 
-r2d3map(shape = fr_dept) %>%
+d3_map(shape = fr_dept) %>%
   add_labs(title = "France")
 ```
 
@@ -78,7 +78,7 @@ library( sf )
 
 bay_area <- read_sf("dev/bay-area/geo_export_bb694795-f052-42b5-a0a1-01db0b2d41a6.shp")
 
-r2d3map(shape = bay_area) %>%
+d3_map(shape = bay_area) %>%
   add_labs(title = "Bay Area") %>%
   add_tooltip(value = "{po_name}")
 ```
@@ -99,11 +99,11 @@ us <- ne_states(country = "united states of america", returnclass = "sf")
 us <- filter(us, !name %in% c("Alaska", "Hawaii"))
 
 # Mercator
-r2d3map(shape = us) %>%
+d3_map(shape = us) %>%
   add_labs(title = "US (mercator)")
 
 # Albers
-r2d3map(shape = us, projection = "Albers") %>%
+d3_map(shape = us, projection = "Albers") %>%
   add_labs(title = "US (albers)")
 ```
 
@@ -139,7 +139,7 @@ london2 <- ms_simplify(london)
 # pryr::object_size(london2)
 # ##> 532 kB
 
-r2d3map(shape = london2) %>%
+d3_map(shape = london2) %>%
   add_tooltip("{NAME}") %>%
   add_labs("London city")
 ```

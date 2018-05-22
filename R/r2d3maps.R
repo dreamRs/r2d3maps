@@ -19,23 +19,23 @@
 #'
 #' # Hello world!
 #' world <- st_as_sf(countries110)
-#' r2d3map(shape = world)
+#' d3_map(shape = world)
 #'
 #' # Brazil!
 #' brazil <- ne_states(country = "brazil", returnclass = "sf")
-#' r2d3map(shape = brazil)
+#' d3_map(shape = brazil)
 #'
 #' # Italy!
 #' italy <- ne_states(country = "italy", returnclass = "sf")
-#' r2d3map(shape = italy)
+#' d3_map(shape = italy)
 #'
 #' # Oceania!
 #' oceania <- ne_countries(continent = "oceania", returnclass = "sf")
 #' oceania <- sf::st_crop(oceania, xmin = 112, ymin = -56, xmax = 194, ymax = 12)
-#' r2d3map(shape = oceania) %>%
+#' d3_map(shape = oceania) %>%
 #'   add_tooltip()
 #'
-r2d3map <- function(shape, projection = "Mercator", width = NULL, height = NULL) {
+d3_map <- function(shape, projection = "Mercator", width = NULL, height = NULL) {
 
   projection <- match.arg(arg = projection, choices = c("Mercator", "Albers", "ConicEqualArea", "NaturalEarth"))
 
@@ -158,15 +158,15 @@ add_labs <- function(map, title = NULL, caption = NULL) {
 #'
 #'
 #' # Tunisia
-#' r2d3map(shape = tunisia) %>%
+#' d3_map(shape = tunisia) %>%
 #'   add_continuous_scale(var = "p")
 #'
 #' # different color palette
-#' r2d3map(shape = tunisia) %>%
+#' d3_map(shape = tunisia) %>%
 #'   add_continuous_scale(var = "p", palette = "Greens")
 #'
 #' # legend
-#' r2d3map(shape = tunisia) %>%
+#' d3_map(shape = tunisia) %>%
 #'   add_continuous_scale(var = "p",
 #'                        palette = "inferno",
 #'                        direction = -1,
@@ -245,15 +245,15 @@ add_continuous_scale <- function(map, var, palette = "viridis", direction = 1,
 #' japan <- ne_states(country = "japan", returnclass = "sf")
 #'
 #' # Japan's regions
-#' r2d3map(shape = japan) %>%
+#' d3_map(shape = japan) %>%
 #'   add_discrete_scale(var = "region")
 #'
 #' # different color palette
-#' r2d3map(shape = japan) %>%
+#' d3_map(shape = japan) %>%
 #'   add_discrete_scale(var = "region", palette = "Set2")
 #'
 #' # custom colors
-#' r2d3map(shape = japan) %>%
+#' d3_map(shape = japan) %>%
 #'   add_discrete_scale2(
 #'     var = "region",
 #'     values = list(
@@ -271,7 +271,7 @@ add_continuous_scale <- function(map, var, palette = "viridis", direction = 1,
 #'   )
 #'
 #' # with legend
-#' r2d3map(shape = japan) %>%
+#' d3_map(shape = japan) %>%
 #'   add_discrete_scale(var = "region", palette = "Set1") %>%
 #'   add_legend(title = "County")
 #'
@@ -388,13 +388,13 @@ add_tooltip <- function(map, value = "<b>{name}</b><<scale_var>>", as_glue = TRU
 #'
 #'
 #' turkey <- ne_states(country = "turkey", returnclass = "sf")
-#' r2d3map(shape = turkey)
+#' d3_map(shape = turkey)
 #'
 #' # zoom with click
-#' r2d3map(shape = turkey) %>% add_zoom()
+#' d3_map(shape = turkey) %>% add_zoom()
 #'
 #' # zoom with mousewheel (open in browser)
-#' r2d3map(shape = turkey) %>% add_zoom(type = "wheel")
+#' d3_map(shape = turkey) %>% add_zoom(type = "wheel")
 #'
 add_zoom <- function(map, enabled = TRUE, type = "click") {
   type <- match.arg(type, c("click", "wheel"), TRUE)
@@ -485,7 +485,7 @@ add_legend <- function(map, title = "", prefix = "", suffix = "", d3_format = NU
 #'   server <- function(input, output, session) {
 #'
 #'     output$map <- renderD3({
-#'       r2d3map(shape = france) %>%
+#'       d3_map(shape = france) %>%
 #'         add_tooltip() %>%
 #'         add_click(
 #'           inputId = "myclick",

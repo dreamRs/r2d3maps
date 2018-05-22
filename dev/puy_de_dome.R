@@ -46,7 +46,7 @@ plot(st_geometry(puy_de_dome2))
 # D3 map ------------------------------------------------------------------
 
 
-r2d3map(shape = puy_de_dome2) %>%
+d3_map(shape = puy_de_dome2) %>%
   add_labs(title = "Puy de Dôme") %>%
   add_tooltip(value = "{nom}")
 

@@ -30,14 +30,14 @@ countries110
 
 # Mercator ----------------------------------------------------------------
 
-r2d3map(shape = countries110) %>%
+d3_map(shape = countries110) %>%
   add_tooltip()
 
 
 
 # Albers ------------------------------------------------------------------
 
-r2d3map(shape = countries110, projection = "Albers") %>%
+d3_map(shape = countries110, projection = "Albers") %>%
   add_tooltip()
 
 
@@ -46,7 +46,7 @@ r2d3map(shape = countries110, projection = "Albers") %>%
 
 # needed to remove antarctica...
 countries110 <- filter(countries110, !continent %in% c("Antarctica"))
-r2d3map(shape = countries110, projection = "NaturalEarth") %>%
+d3_map(shape = countries110, projection = "NaturalEarth") %>%
   add_tooltip()
 
 
@@ -55,7 +55,7 @@ r2d3map(shape = countries110, projection = "NaturalEarth") %>%
 
 # needed to remove antarctica...
 countries110 <- filter(countries110, !continent %in% c("Antarctica"))
-r2d3map(shape = countries110, projection = "ConicEqualArea") %>%
+d3_map(shape = countries110, projection = "ConicEqualArea") %>%
   add_tooltip()
 
 

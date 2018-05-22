@@ -40,15 +40,15 @@ library( rnaturalearth )
 japan <- ne_states(country = "japan", returnclass = "sf")
 
 # Japan's regions
-r2d3map(shape = japan) \%>\%
+d3_map(shape = japan) \%>\%
   add_discrete_scale(var = "region")
 
 # different color palette
-r2d3map(shape = japan) \%>\%
+d3_map(shape = japan) \%>\%
   add_discrete_scale(var = "region", palette = "Set2")
 
 # custom colors
-r2d3map(shape = japan) \%>\%
+d3_map(shape = japan) \%>\%
   add_discrete_scale2(
     var = "region",
     values = list(
@@ -66,7 +66,7 @@ r2d3map(shape = japan) \%>\%
   )
 
 # with legend
-r2d3map(shape = japan) \%>\%
+d3_map(shape = japan) \%>\%
   add_discrete_scale(var = "region", palette = "Set1") \%>\%
   add_legend(title = "County")
 

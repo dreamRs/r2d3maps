@@ -41,15 +41,15 @@ tunisia$foo <- sample.int(1e5, nrow(tunisia))
 
 
 # Tunisia
-r2d3map(shape = tunisia) \%>\%
+d3_map(shape = tunisia) \%>\%
   add_continuous_scale(var = "p")
 
 # different color palette
-r2d3map(shape = tunisia) \%>\%
+d3_map(shape = tunisia) \%>\%
   add_continuous_scale(var = "p", palette = "Greens")
 
 # legend
-r2d3map(shape = tunisia) \%>\%
+d3_map(shape = tunisia) \%>\%
   add_continuous_scale(var = "p",
                        palette = "inferno",
                        direction = -1,

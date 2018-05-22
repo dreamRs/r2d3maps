@@ -42,7 +42,7 @@ london2 <- ms_simplify(london)
 
 # D3 map ------------------------------------------------------------------
 
-r2d3map(shape = london2) %>%
+d3_map(shape = london2) %>%
   add_tooltip("{NAME}") %>%
   add_labs("London city")
 

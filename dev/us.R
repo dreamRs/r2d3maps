@@ -44,11 +44,11 @@ plot(st_geometry(us))
 # Maps --------------------------------------------------------------------
 
 # Mercator
-r2d3map(shape = us) %>%
+d3_map(shape = us) %>%
   add_labs(title = "US (mercator)")
 
 # Albers
-r2d3map(shape = us, projection = "Albers") %>%
+d3_map(shape = us, projection = "Albers") %>%
   add_labs(title = "US (albers)")
 
 
@@ -94,11 +94,11 @@ us_aea <- ms_simplify(us_aea)
 
 # Maps
 # Mercator
-r2d3map(shape = us_aea) %>%
+d3_map(shape = us_aea) %>%
   add_labs(title = "US (mercator)")
 
 # Albers
-r2d3map(shape = us_aea, projection = "Albers") %>%
+d3_map(shape = us_aea, projection = "Albers") %>%
   add_labs(title = "US (albers)") %>%
   add_tooltip("{name}")
 

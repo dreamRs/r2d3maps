@@ -43,7 +43,7 @@ africa$national_at_least_basic <- round(africa$national_at_least_basic)
 
 # Map ---------------------------------------------------------------------
 
-map_africa <- r2d3map(shape = africa) %>%
+map_africa <- d3_map(shape = africa) %>%
   add_continuous_scale(var = "national_at_least_basic", range = c(0, 100)) %>%
   add_tooltip(value = "<b>{name}</b>: {national_at_least_basic}%") %>%
   add_legend(title = "Population with at least basic access", suffix = "%") %>%

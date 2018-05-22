@@ -25,7 +25,7 @@ library( magick )
 
 # Japan
 japan <- ne_states(country = "japan", returnclass = "sf")
-japan_map <- r2d3map(shape = japan) %>%
+japan_map <- d3_map(shape = japan) %>%
   add_labs(title = "Japan")
 japan_map
 
@@ -43,7 +43,7 @@ image_read(path = "img/japan.png") %>%
 # New Zealand
 nz <- ne_states(country = "New Zealand", returnclass = "sf")
 nz <- sf::st_crop(nz, xmin = 159.104, ymin = -48.385, xmax = 193.601, ymax = -33.669)
-r2d3map(shape = nz) %>%
+d3_map(shape = nz) %>%
   add_labs(title = "New Zealand")
 
 image_read(path = "img/new_zealand.png") %>%
@@ -54,7 +54,7 @@ image_read(path = "img/new_zealand.png") %>%
 
 # South america
 south_america <- ne_countries(continent = "south america", returnclass = "sf")
-r2d3map(shape = south_america) %>%
+d3_map(shape = south_america) %>%
   add_labs(title = "South America")
 
 image_read(path = "img/south_america.png") %>%
@@ -67,7 +67,7 @@ image_read(path = "img/south_america.png") %>%
 fr_dept <- ne_states(country = "france", returnclass = "sf")
 fr_dept <- fr_dept[fr_dept$type_en %in% "Metropolitan department", ]
 
-r2d3map(shape = fr_dept) %>%
+d3_map(shape = fr_dept) %>%
   add_labs(title = "France")
 
 
@@ -87,11 +87,11 @@ us <- ne_states(country = "united states of america", returnclass = "sf")
 us <- filter(us, !name %in% c("Alaska", "Hawaii"))
 
 # Mercator
-r2d3map(shape = us) %>%
+d3_map(shape = us) %>%
   add_labs(title = "US (mercator)")
 
 # Albers
-r2d3map(shape = us, projection = "Albers") %>%
+d3_map(shape = us, projection = "Albers") %>%
   add_labs(title = "US (albers)")
 
 
