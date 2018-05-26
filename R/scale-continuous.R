@@ -1,0 +1,217 @@
+
+#' @title Add continuous scale to a map
+#'
+#' @description Map a continuous numerical variables by
+#' cutting it into class intervals.
+#'
+#' @param map A \code{d3_map} \code{htmlwidget} object.
+#' @param var Variable to map.
+#' @param palette Color palette, you can use Viridis or Brewer color palette.
+#' @param direction Sets the order of colors in the scale.
+#'  If 1, the default, colors are ordered from darkest to lightest.
+#'  If -1, the order of colors is reversed.
+#' @param n_breaks Number of breaks to cut data (depending on \code{style}, number of breaks can be re-computed).
+#' @param style Style for computing breaks, see \code{\link[classInt]{classIntervals}}.
+#'
+#' @export
+#'
+#' @importFrom scales col_numeric viridis_pal
+#' @importFrom utils type.convert
+#' @importFrom classInt classIntervals
+#'
+#' @examples
+#' library( r2d3maps )
+#' library( rnaturalearth )
+#'
+#' # data
+#' tunisia <- ne_states(country = "tunisia", returnclass = "sf")
+#'
+#' # fake percentage
+#' tunisia$p <- sample.int(100, nrow(tunisia))
+#'
+#' # fake continuous var
+#' tunisia$foo <- sample.int(1e5, nrow(tunisia))
+#'
+#'
+#' # Tunisia
+#' d3_map(shape = tunisia) %>%
+#'   add_continuous_breaks(var = "p")
+#'
+#' # different color palette
+#' d3_map(shape = tunisia) %>%
+#'   add_continuous_breaks(var = "p", palette = "Greens")
+#'
+#' # legend
+#' d3_map(shape = tunisia) %>%
+#'   add_continuous_breaks(var = "p",
+#'                        palette = "inferno",
+#'                        direction = -1) %>%
+#'   add_legend(title = "Percentage", suffix = "%")
+#'
+#'
+#'
+#' # different style of breaks
+#'
+#' # equal
+#' d3_map(shape = tunisia) %>%
+#'   add_continuous_breaks(var = "foo",
+#'                        palette = "inferno",
+#'                        direction = -1,
+#'                        style = "equal") %>%
+#'   add_legend(title = "foo", d3_format = ".0f")
+#'
+#' # quantile
+#' d3_map(shape = tunisia) %>%
+#'   add_continuous_breaks(var = "foo",
+#'                        palette = "inferno",
+#'                        direction = -1,
+#'                        style = "quantile") %>%
+#'   add_legend(title = "foo", d3_format = ".0f")
+#'
+#' # pretty
+#' d3_map(shape = tunisia) %>%
+#'   add_continuous_breaks(var = "foo",
+#'                        palette = "inferno",
+#'                        direction = -1,
+#'                        style = "pretty") %>%
+#'   add_legend(title = "foo", d3_format = ".0f")
+add_continuous_breaks <- function(map, var, palette = "viridis", direction = 1,
+                                 n_breaks = 5, style = "pretty") {
+  palette <- match.arg(
+    arg = palette,
+    choices = c("viridis", "magma", "plasma", "inferno", "cividis",
+                "Blues", "BuGn", "BuPu", "GnBu", "Greens",
+                "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples",
+                "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd")
+  )
+  if (is.null(map$x$options$data))
+    stop("No data !", call. = FALSE)
+  var_ <- map$x$options$data[[var]]
+  if (is.null(var_))
+    stop("Invalid variable supplied to continuous scale !", call. = FALSE)
+
+  if (is.character(var_))
+    var_ <- type.convert(var_)
+  if (!is.numeric(var_))
+    stop("'var' must be a numeric vector!", call. = FALSE)
+  range_col <- classIntervals(var = var_, n = n_breaks, style = style)$brks
+  n_breaks <- length(range_col) - 1
+  if (palette %in% c("viridis", "magma", "plasma", "inferno", "cividis")) {
+    colors <- viridis_pal(option = palette, direction = direction)(n_breaks)
+    colors <- substr(colors, 1, 7)
+  } else {
+    pal <- col_numeric(palette = palette, domain = 0:100, na.color = "#808080")
+    colors <- pal(seq(from = 20, to = 100, length.out = n_breaks + 1))
+    if (direction > 0) {
+      colors <- rev(colors)
+    }
+  }
+  .r2d3map_opt(
+    map = map, name = "colors",
+    color_type = "continuous-breaks",
+    color_var = var,
+    range_var = c(0, max(var_, na.rm = TRUE)),
+    range_col = range_col,
+    colors = c("#fafafa", colors)
+  )
+}
+
+
+
+
+#' @title Add gradient scale to a map
+#'
+#' @description Create a two colour gradient (low-high) or
+#' a diverging colour gradient (low-mid-high) based on a continuous variable.
+#'
+#' @param map A \code{d3_map} \code{htmlwidget} object.
+#' @param var Variable to map.
+#' @param low,high Colours for low and high ends of the gradient.
+#' @param range A length two vector to force range of data.
+#'
+#' @export
+#'
+#' @name gradient-scale
+#'
+#' @importFrom scales seq_gradient_pal rescale
+#'
+#' @examples
+#' #todo
+add_continuous_gradient <- function(map, var, low = "#132B43", high = "#56B1F7", range = NULL) {
+  if (is.null(map$x$options$data))
+    stop("No data !", call. = FALSE)
+  var_ <- map$x$options$data[[var]]
+  if (is.null(var_))
+    stop("Invalid variable supplied to continuous scale !", call. = FALSE)
+
+  if (is.character(var_))
+    var_ <- type.convert(var_)
+  if (!is.numeric(var_))
+    stop("'var' must be a numeric vector!", call. = FALSE)
+  if (!is.null(range))
+    var_ <- c(var_, range)
+  var_ <- sort(unique(var_), na.last = TRUE)
+  pal <- seq_gradient_pal(low = low, high = high)
+  var_scale <- rescale(var_, to = c(0, 1))
+  colors <- pal(var_scale)
+  colors_legend <- pal(seq(from = 0, to = 1, along.with = var_scale))
+  .r2d3map_opt(
+    map = map, name = "colors",
+    color_type = "continuous-gradient",
+    color_var = var,
+    range_var = var_,
+    scale_var = var_scale,
+    colors = c(colors, "#fafafa"),
+    colors_legend = colors_legend,
+    legend_label = append(
+      x = range(var_, na.rm = TRUE),
+      values = diff(range(var_, na.rm = TRUE))/2,
+      after = 1
+    ),
+    gradient_id = paste0("gradient-", sample.int(1e9, 1))
+  )
+}
+
+
+#' @param mid Colour for mid point.
+#'
+#' @export
+#'
+#' @importFrom scales div_gradient_pal muted
+#'
+#' @rdname gradient-scale
+add_continuous_gradient2 <- function(map, var, low = muted("red"), mid = "white", high = muted("blue"), range = NULL) {
+  if (is.null(map$x$options$data))
+    stop("No data !", call. = FALSE)
+  var_ <- map$x$options$data[[var]]
+  if (is.null(var_))
+    stop("Invalid variable supplied to continuous scale !", call. = FALSE)
+
+  if (is.character(var_))
+    var_ <- type.convert(var_)
+  if (!is.numeric(var_))
+    stop("'var' must be a numeric vector!", call. = FALSE)
+  if (!is.null(range))
+    var_ <- c(var_, range)
+  var_ <- sort(unique(var_), na.last = TRUE)
+  pal <- div_gradient_pal(low = low, mid = mid, high = high)
+  var_scale <- rescale(var_, to = c(0, 1))
+  colors <- pal(var_scale)
+  colors_legend <- pal(seq(from = 0, to = 1, along.with = var_scale))
+  .r2d3map_opt(
+    map = map, name = "colors",
+    color_type = "continuous-gradient",
+    color_var = var,
+    range_var = var_,
+    scale_var = var_scale,
+    colors = c(colors, "#fafafa"),
+    colors_legend = colors_legend,
+    legend_label = append(
+      x = range(var_, na.rm = TRUE),
+      values = diff(range(var_, na.rm = TRUE))/2,
+      after = 1
+    ),
+    gradient_id = paste0("gradient-", sample.int(1e9, 1))
+  )
+}
+

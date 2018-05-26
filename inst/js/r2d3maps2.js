@@ -121,8 +121,8 @@ r2d3.onRender(function(json, svg, width, height, options) {
 
       }
 
-      // continuous colors
-      if (options.colors.color_type == 'continuous') {
+      // continuous breaks colors
+      if (options.colors.color_type == 'continuous-breaks') {
 
         var x = d3.scaleLinear()
                   .range([1, 200])
@@ -180,8 +180,107 @@ r2d3.onRender(function(json, svg, width, height, options) {
               .attr("fill", function(d) { return color(d.properties[options.colors.color_var]); })
               .attr("d", path);
 
+      }
+
+      if (options.colors.color_type == 'continuous-gradient') {
+        // color scale for gradient
+        var colorGradient = d3.scaleLinear()
+            .range(options.colors.colors)
+            .domain(options.colors.scale_var);
+        var colorInterpolateGradient = d3.scaleLinear()
+          	.domain(d3.extent(options.colors.range_var))
+          	.range([0,1]);
+
+        // legend for gradient
+        if (options.legend) {
+          var widthLegend = width/3; //Math.min(width/3, 300)
+
+          //Append a defs (for definition) element to your SVG
+          var defs = svg.append("defs");
+
+          //Append a linearGradient element to the defs and give it a unique id
+          var linearGradient = defs.append("linearGradient")
+              .attr("id", options.colors.gradient_id);
+
+          linearGradient
+            .attr("x1", "0%")
+            .attr("y1", "0%")
+            .attr("x2", "100%")
+            .attr("y2", "0%");
+          //Append multiple color stops by using D3's data/enter step
+          linearGradient.selectAll("stop")
+              .data( options.colors.colors_legend )
+              .enter().append("stop")
+              .attr("offset", function(d,i) { return i/(options.colors.colors_legend.length-1); })
+              .attr("stop-color", function(d) { return d; });
 
 
+          //Color Legend container
+          var linearGradientSvg = svg.append("g")
+          	.attr("class", "legendWrapper");
+
+          //Draw the rectangle and fill with gradient
+          linearGradientSvg.append("rect")
+              .attr("width", widthLegend) //
+              .attr("height", 10)
+              .style("fill", "url(#" + options.colors.gradient_id + ")")
+              .attr("x", 5)
+              .attr("y", height-30);
+
+          linearGradientSvg.append("text")
+          	.attr("x", 5)
+          	.attr("y", height-35)
+          	.style("font-size", 14)
+          	.style("text-anchor", "start")
+          	.text(options.legend_opts.title);
+
+          linearGradientSvg.append("text")
+          	.attr("x", 10)
+          	.attr("y", height-5)
+          	.style("font-size", 11)
+          	.style("text-anchor", "middle")
+          	.text(function() {
+          	  if (options.legend_opts.d3_format) {
+          	    return d3.format(options.legend_opts.d3_format)(options.colors.legend_label[0]);
+          	  } else {
+          	    return options.legend_opts.prefix + options.colors.legend_label[0] + options.legend_opts.suffix;
+          	  }
+          	});
+          linearGradientSvg.append("text")
+          	.attr("x", widthLegend/2+5)
+          	.attr("y", height-5)
+          	.style("font-size", 11)
+          	.style("text-anchor", "middle")
+          	.text(function() {
+          	  if (options.legend_opts.d3_format) {
+          	    return d3.format(options.legend_opts.d3_format)(options.colors.legend_label[1]);
+          	  } else {
+          	    return options.legend_opts.prefix + options.colors.legend_label[1] + options.legend_opts.suffix;
+          	  }
+          	});
+          linearGradientSvg.append("text")
+          	.attr("x", widthLegend)
+          	.attr("y", height-5)
+          	.style("font-size", 11)
+          	.style("text-anchor", "middle")
+          	.text(function() {
+          	  if (options.legend_opts.d3_format) {
+          	    return d3.format(options.legend_opts.d3_format)(options.colors.legend_label[2]);
+          	  } else {
+          	    return options.legend_opts.prefix + options.colors.legend_label[2] + options.legend_opts.suffix;
+          	  }
+          	});
+        }
+        // map with gradient
+        map = g.append("g")
+            .attr("class", "feature")
+            .selectAll("path")
+            .data(topojson.feature(json, json.objects.states).features)
+            .enter().append("path")
+              .attr("fill", function(d) {
+                return colorGradient(colorInterpolateGradient(d.properties[options.colors.color_var]));
+              })
+              .attr("d", path);
       }
 
     } else {

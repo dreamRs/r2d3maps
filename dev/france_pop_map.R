@@ -37,17 +37,36 @@ fr_dept <- left_join(
 
 # Map ---------------------------------------------------------------------
 
+## With breaks
+
 d3_map(shape = fr_dept) %>%
-  add_continuous_scale(var = "population_totale", palette = "Blues", n_breaks = 7) %>%
+  add_continuous_breaks(var = "population_totale", palette = "Blues", n_breaks = 7) %>%
   add_tooltip(value = ~paste("<b>", nom_du_departement, "</b>:", format(population_totale, big.mark = " "))) %>%
   add_legend(title = "Population", d3_format = ".2s") %>%
   add_labs(title = "France population")
 
 
+# different style for breaks (by quantiles)
 d3_map(shape = fr_dept) %>%
-  add_continuous_scale(var = "population_totale", palette = "viridis", n_breaks = 7) %>%
+  add_continuous_breaks(var = "population_totale", palette = "Blues", n_breaks = 7, style = "quantile") %>%
+  add_tooltip(value = ~paste("<b>", nom_du_departement, "</b>:", format(population_totale, big.mark = " "))) %>%
+  add_legend(title = "Population", d3_format = ".2s") %>%
+  add_labs(title = "France population")
+
+
+# different color (viridis)
+d3_map(shape = fr_dept) %>%
+  add_continuous_breaks(var = "population_totale", palette = "viridis", n_breaks = 7) %>%
   add_tooltip(value = "<b>{nom_du_departement}</b>: {population_totale}") %>%
   add_legend(title = "Population", d3_format = ".2s") %>%
   add_labs(title = "France population")
+
+
+
+## With gradient
+
+d3_map(shape = fr_dept) %>%
+  add_continuous_gradient(var = "population_totale") %>%
+  add_legend(title = "Population", d3_format = ".2s")
 
 
