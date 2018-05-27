@@ -121,11 +121,16 @@ d3_map <- function(shape, projection = "Mercator", stroke_col = "#fff", stroke_w
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' library( r2d3maps )
+#' library( rnaturalearth )
 #'
-#' # todo
+#' ireland <- ne_states(country = "ireland", returnclass = "sf")
+#' d3_map(shape = ireland) %>%
+#'   add_labs(
+#'     title = "Ireland",
+#'     caption = "Data from NaturalEarth"
+#'   )
 #'
-#' }
 add_labs <- function(map, title = NULL, caption = NULL) {
   .r2d3map_opt(map, "labs", title = title, caption = caption)
 }

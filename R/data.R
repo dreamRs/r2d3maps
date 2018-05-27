@@ -57,3 +57,20 @@
 "prenoms_fr"
 
 
+
+
+#' Irish population by county (in 2016).
+#'
+#'
+#' @format A data frame with 34 rows and 7 variables:
+#' \describe{
+#'   \item{adm1_code}{Code ADM1 (for join with NaturalEarth data)}
+#'   \item{persons_2011}{Population in 2011}
+#'   \item{persons_2016}{Population in 2016}
+#'   \item{males_2016}{Males in 2016}
+#'   \item{females_2016}{Females in 2016}
+#'   \item{changes_actual}{Change between 2011 and 2016}
+#'   \item{changes_percentage}{Change in percentage}
+#' }
+#' @source \href{https://www.cso.ie/en/releasesandpublications/ep/p-cpr/censusofpopulation2016-preliminaryresults/geochan/}{Central Statistics Office}
+"pop_irl"

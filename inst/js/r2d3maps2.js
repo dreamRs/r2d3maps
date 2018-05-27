@@ -96,6 +96,8 @@ r2d3.onRender(function(json, svg, width, height, options) {
             .data(topojson.feature(json, json.objects.states).features)
             .enter().append("path")
               .attr("fill", function(d) { return ordinal(d.properties[options.colors.color_var]); })
+              .attr("stroke", options.stroke_col)
+              .attr("stroke-width", options.stroke_width + "px")
               .attr("d", path);
 
 
@@ -178,6 +180,8 @@ r2d3.onRender(function(json, svg, width, height, options) {
             .data(topojson.feature(json, json.objects.states).features)
             .enter().append("path")
               .attr("fill", function(d) { return color(d.properties[options.colors.color_var]); })
+              .attr("stroke", options.stroke_col)
+              .attr("stroke-width", options.stroke_width + "px")
               .attr("d", path);
 
       }
@@ -293,6 +297,8 @@ r2d3.onRender(function(json, svg, width, height, options) {
             .data(topojson.feature(json, json.objects.states).features)
             .enter().append("path")
               .attr("fill", "#5f799c")
+              .attr("stroke", options.stroke_col)
+              .attr("stroke-width", options.stroke_width + "px")
               .attr("d", path);
 
     }

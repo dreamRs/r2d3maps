@@ -20,9 +20,14 @@ A \code{r2d3map} \code{htmlwidget} object.
 Labs for a r2d3 map
 }
 \examples{
-\dontrun{
+library( r2d3maps )
+library( rnaturalearth )
 
-# todo
+ireland <- ne_states(country = "ireland", returnclass = "sf")
+d3_map(shape = ireland) \%>\%
+  add_labs(
+    title = "Ireland",
+    caption = "Data from NaturalEarth"
+  )
 
-}
 }
