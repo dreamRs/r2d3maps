@@ -4,12 +4,14 @@
   fill: #ccc;
 }
 
+
 .mesh {
   fill: none;
-  stroke: #fff;
-  stroke-width: .5px;
+  /*stroke: #fff;*/
+  /*stroke-width: .5px;*/
   stroke-linejoin: round;
 }
+
 
 .outline {
   fill: #ddd;

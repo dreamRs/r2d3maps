@@ -28,5 +28,44 @@ Create a two colour gradient (low-high) or
 a diverging colour gradient (low-mid-high) based on a continuous variable.
 }
 \examples{
-#todo
+library( r2d3maps )
+library( rnaturalearth )
+
+# shapes
+africa <- ne_countries(continent = "Africa", returnclass = "sf")
+
+# drinking water data
+data("water_africa")
+wa2015 <- water_africa[water_africa$year == "2015", ]
+
+# merge with sf object
+africa <- merge(
+  x = africa[, c("adm0_a3_is", "name", "geometry")],
+  y = wa2015[, c("iso3", "national_at_least_basic")],
+  by.x = "adm0_a3_is", by.y = "iso3"
+)
+
+africa$national_at_least_basic <- round(africa$national_at_least_basic)
+
+# two colour gradient
+d3_map(shape = africa) \%>\%
+  add_continuous_gradient(
+    var = "national_at_least_basic",
+    range = c(0, 100)
+  ) \%>\%
+  add_tooltip(value = "<b>{name}</b>: {national_at_least_basic}\%") \%>\%
+  add_legend(title = "Population with at least basic access", suffix = "\%") \%>\%
+  add_labs(title = "Drinking water in Africa", caption = "Data: https://washdata.org/")
+
+
+# three colour gradient
+d3_map(shape = africa, stroke_col = "#585858") \%>\%
+  add_continuous_gradient2(
+    var = "national_at_least_basic",
+    range = c(0, 100)
+  ) \%>\%
+  add_tooltip(value = "<b>{name}</b>: {national_at_least_basic}\%") \%>\%
+  add_legend(title = "Population with at least basic access", suffix = "\%") \%>\%
+  add_labs(title = "Drinking water in Africa", caption = "Data: https://washdata.org/")
+
 }

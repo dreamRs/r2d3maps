@@ -82,4 +82,5 @@ d3_map(shape = tunisia) \%>\%
                        direction = -1,
                        style = "pretty") \%>\%
   add_legend(title = "foo", d3_format = ".0f")
+
 }

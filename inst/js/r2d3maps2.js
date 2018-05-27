@@ -280,6 +280,8 @@ r2d3.onRender(function(json, svg, width, height, options) {
               .attr("fill", function(d) {
                 return colorGradient(colorInterpolateGradient(d.properties[options.colors.color_var]));
               })
+              .attr("stroke", options.stroke_col)
+              .attr("stroke-width", options.stroke_width + "px")
               .attr("d", path);
       }
 

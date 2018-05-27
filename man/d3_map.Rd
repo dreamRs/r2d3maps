@@ -4,12 +4,17 @@
 \alias{d3_map}
 \title{Create a map in D3}
 \usage{
-d3_map(shape, projection = "Mercator", width = NULL, height = NULL)
+d3_map(shape, projection = "Mercator", stroke_col = "#fff",
+  stroke_width = 0.5, width = NULL, height = NULL)
 }
 \arguments{
 \item{shape}{A \code{sf} or \code{sp} object.}
 
 \item{projection}{D3 projection to use.}
+
+\item{stroke_col}{Color of shape contours.}
+
+\item{stroke_width}{Width of shape contour in pixels.}
 
 \item{width}{Desired width for output widget.}
 

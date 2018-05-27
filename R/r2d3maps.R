@@ -3,6 +3,8 @@
 #'
 #' @param shape A \code{sf} or \code{sp} object.
 #' @param projection D3 projection to use.
+#' @param stroke_col Color of shape contours.
+#' @param stroke_width Width of shape contour in pixels.
 #' @param width Desired width for output widget.
 #' @param height Desired height for output widget.
 #'
@@ -35,7 +37,7 @@
 #' d3_map(shape = oceania) %>%
 #'   add_tooltip()
 #'
-d3_map <- function(shape, projection = "Mercator", width = NULL, height = NULL) {
+d3_map <- function(shape, projection = "Mercator", stroke_col = "#fff", stroke_width = 0.5, width = NULL, height = NULL) {
 
   projection <- match.arg(
     arg = projection,
@@ -78,7 +80,8 @@ d3_map <- function(shape, projection = "Mercator", width = NULL, height = NULL) 
     options = list(
       data = data, projection = projection,
       tooltip = FALSE, legend = FALSE,
-      zoom = FALSE, shiny = FALSE
+      zoom = FALSE, shiny = FALSE,
+      stroke_col = stroke_col, stroke_width = stroke_width
     )
   )
   map$dependencies <- rev(map$dependencies)
