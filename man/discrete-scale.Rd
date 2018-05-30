@@ -7,9 +7,9 @@
 \title{Add discrete scale to a map}
 \usage{
 add_discrete_scale(map, var, palette = "viridis", direction = 1,
-  na.color = "#D8D8D8")
+  na_color = "#D8D8D8")
 
-add_discrete_scale2(map, var, values, na.color = "#D8D8D8")
+add_discrete_scale2(map, var, values, na_color = "#D8D8D8")
 }
 \arguments{
 \item{map}{A \code{r2d3map} \code{htmlwidget} object.}
@@ -22,7 +22,7 @@ add_discrete_scale2(map, var, values, na.color = "#D8D8D8")
 If 1, the default, colors are ordered from darkest to lightest.
 If -1, the order of colors is reversed.}
 
-\item{na.color}{Color to use for missing values.}
+\item{na_color}{Color to use for missing values.}
 
 \item{values}{Named list mapping data values to colors.
 It's recommended to use Hex color code without alpha,
@@ -62,7 +62,7 @@ d3_map(shape = japan) \%>\%
       "Tohoku" = "#F08080",
       "Okinawa" = "red"
     ),
-    na.color = "#000"
+    na_color = "#000"
   )
 
 # with legend

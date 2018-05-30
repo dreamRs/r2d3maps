@@ -10,7 +10,7 @@
 #' @param direction Sets the order of colors in the scale.
 #'  If 1, the default, colors are ordered from darkest to lightest.
 #'  If -1, the order of colors is reversed.
-#' @param na.color Color to use for missing values.
+#' @param na_color Color to use for missing values.
 #'
 #' @export
 #'
@@ -48,7 +48,7 @@
 #'       "Tohoku" = "#F08080",
 #'       "Okinawa" = "red"
 #'     ),
-#'     na.color = "#000"
+#'     na_color = "#000"
 #'   )
 #'
 #' # with legend
@@ -56,7 +56,7 @@
 #'   add_discrete_scale(var = "region", palette = "Set1") %>%
 #'   add_legend(title = "County")
 #'
-add_discrete_scale <- function(map, var, palette = "viridis", direction = 1, na.color = "#D8D8D8") {
+add_discrete_scale <- function(map, var, palette = "viridis", direction = 1, na_color = "#D8D8D8") {
   if (is.null(map$x$options$data))
     stop("No data !", call. = FALSE)
   var_ <- map$x$options$data[[var]]
@@ -76,7 +76,7 @@ add_discrete_scale <- function(map, var, palette = "viridis", direction = 1, na.
     color_type = "discrete",
     color_var = var,
     values = values,
-    colors = if (na) c(colors, na.color) else colors
+    colors = if (na) c(colors, na_color) else colors
   )
 }
 
@@ -87,7 +87,7 @@ add_discrete_scale <- function(map, var, palette = "viridis", direction = 1, na.
 #' @export
 #'
 #' @rdname discrete-scale
-add_discrete_scale2 <- function(map, var, values, na.color = "#D8D8D8") {
+add_discrete_scale2 <- function(map, var, values, na_color = "#D8D8D8") {
   if (is.null(map$x$options$data))
     stop("No data !", call. = FALSE)
   var_ <- map$x$options$data[[var]]
@@ -104,7 +104,7 @@ add_discrete_scale2 <- function(map, var, values, na.color = "#D8D8D8") {
     color_type = "discrete",
     color_var = var,
     values = values,
-    colors = if (na) c(colors, na.color) else colors
+    colors = if (na) c(colors, na_color) else colors
   )
 }
 
