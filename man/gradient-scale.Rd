@@ -7,10 +7,10 @@
 \title{Add gradient scale to a map}
 \usage{
 add_continuous_gradient(map, var, low = "#132B43", high = "#56B1F7",
-  range = NULL)
+  range = NULL, na_color = "#b8b8b8")
 
 add_continuous_gradient2(map, var, low = muted("red"), mid = "white",
-  high = muted("blue"), range = NULL)
+  high = muted("blue"), range = NULL, na_color = "#b8b8b8")
 }
 \arguments{
 \item{map}{A \code{d3_map} \code{htmlwidget} object.}
@@ -20,6 +20,8 @@ add_continuous_gradient2(map, var, low = muted("red"), mid = "white",
 \item{low, high}{Colours for low and high ends of the gradient.}
 
 \item{range}{A length two vector to force range of data.}
+
+\item{na_color}{Color to use for missing value(s).}
 
 \item{mid}{Colour for mid point.}
 }

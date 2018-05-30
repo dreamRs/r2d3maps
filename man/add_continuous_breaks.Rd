@@ -5,7 +5,7 @@
 \title{Add continuous scale to a map}
 \usage{
 add_continuous_breaks(map, var, palette = "viridis", direction = 1,
-  n_breaks = 5, style = "pretty")
+  n_breaks = 5, style = "pretty", na_color = "#b8b8b8")
 }
 \arguments{
 \item{map}{A \code{d3_map} \code{htmlwidget} object.}
@@ -21,6 +21,8 @@ If -1, the order of colors is reversed.}
 \item{n_breaks}{Number of breaks to cut data (depending on \code{style}, number of breaks can be re-computed).}
 
 \item{style}{Style for computing breaks, see \code{\link[classInt]{classIntervals}}.}
+
+\item{na_color}{Color to use for missing value(s).}
 }
 \description{
 Map a continuous numerical variables by

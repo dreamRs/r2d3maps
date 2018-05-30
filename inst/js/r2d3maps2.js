@@ -65,7 +65,7 @@ r2d3.onRender(function(json, svg, width, height, options) {
   // define bounding box & associated scale & transform
   var b = path.bounds(states),
       s = 0.9 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height),
-      t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
+      t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - 20 - s * (b[1][1] + b[0][1])) / 2];
 
   // re-project
   projection
@@ -179,7 +179,14 @@ r2d3.onRender(function(json, svg, width, height, options) {
             .selectAll("path")
             .data(topojson.feature(json, json.objects.states).features)
             .enter().append("path")
-              .attr("fill", function(d) { return color(d.properties[options.colors.color_var]); })
+              .attr("fill", function(d) {
+                //console.log(d.properties[options.colors.color_var]);
+                if (d.properties[options.colors.color_var] == 'NA') {
+                  return options.colors.na_color;
+                } else {
+                  return color(d.properties[options.colors.color_var]);
+                }
+              })
               .attr("stroke", options.stroke_col)
               .attr("stroke-width", options.stroke_width + "px")
               .attr("d", path);
@@ -282,7 +289,11 @@ r2d3.onRender(function(json, svg, width, height, options) {
             .data(topojson.feature(json, json.objects.states).features)
             .enter().append("path")
               .attr("fill", function(d) {
-                return colorGradient(colorInterpolateGradient(d.properties[options.colors.color_var]));
+                if (d.properties[options.colors.color_var] == 'NA') {
+                  return options.colors.na_color;
+                } else {
+                  return colorGradient(colorInterpolateGradient(d.properties[options.colors.color_var]));
+                }
               })
               .attr("stroke", options.stroke_col)
               .attr("stroke-width", options.stroke_width + "px")

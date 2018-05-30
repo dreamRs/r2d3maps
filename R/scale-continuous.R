@@ -12,6 +12,7 @@
 #'  If -1, the order of colors is reversed.
 #' @param n_breaks Number of breaks to cut data (depending on \code{style}, number of breaks can be re-computed).
 #' @param style Style for computing breaks, see \code{\link[classInt]{classIntervals}}.
+#' @param na_color Color to use for missing value(s).
 #'
 #' @export
 #'
@@ -77,7 +78,7 @@
 #'   add_legend(title = "foo", d3_format = ".0f")
 #'
 add_continuous_breaks <- function(map, var, palette = "viridis", direction = 1,
-                                 n_breaks = 5, style = "pretty") {
+                                 n_breaks = 5, style = "pretty", na_color = "#b8b8b8") {
   palette <- match.arg(
     arg = palette,
     choices = c("viridis", "magma", "plasma", "inferno", "cividis",
@@ -113,6 +114,7 @@ add_continuous_breaks <- function(map, var, palette = "viridis", direction = 1,
     color_var = var,
     range_var = c(0, max(var_, na.rm = TRUE)),
     range_col = range_col,
+    na_color = na_color,
     colors = c("#fafafa", colors)
   )
 }
@@ -129,6 +131,7 @@ add_continuous_breaks <- function(map, var, palette = "viridis", direction = 1,
 #' @param var Variable to map.
 #' @param low,high Colours for low and high ends of the gradient.
 #' @param range A length two vector to force range of data.
+#' @param na_color Color to use for missing value(s).
 #'
 #' @export
 #'
@@ -177,7 +180,7 @@ add_continuous_breaks <- function(map, var, palette = "viridis", direction = 1,
 #'   add_legend(title = "Population with at least basic access", suffix = "%") %>%
 #'   add_labs(title = "Drinking water in Africa", caption = "Data: https://washdata.org/")
 #'
-add_continuous_gradient <- function(map, var, low = "#132B43", high = "#56B1F7", range = NULL) {
+add_continuous_gradient <- function(map, var, low = "#132B43", high = "#56B1F7", range = NULL, na_color = "#b8b8b8") {
   if (is.null(map$x$options$data))
     stop("No data !", call. = FALSE)
   var_ <- map$x$options$data[[var]]
@@ -190,7 +193,7 @@ add_continuous_gradient <- function(map, var, low = "#132B43", high = "#56B1F7",
     stop("'var' must be a numeric vector!", call. = FALSE)
   if (!is.null(range))
     var_ <- c(var_, range)
-  var_ <- sort(unique(var_), na.last = TRUE)
+  var_ <- sort(unique(var_))
   pal <- seq_gradient_pal(low = low, high = high)
   var_scale <- rescale(var_, to = c(0, 1))
   colors <- pal(var_scale)
@@ -203,6 +206,7 @@ add_continuous_gradient <- function(map, var, low = "#132B43", high = "#56B1F7",
     scale_var = var_scale,
     colors = c(colors, "#fafafa"),
     colors_legend = colors_legend,
+    na_color = na_color,
     legend_label = append(
       x = range(var_, na.rm = TRUE),
       values = diff(range(var_, na.rm = TRUE))/2,
@@ -220,7 +224,8 @@ add_continuous_gradient <- function(map, var, low = "#132B43", high = "#56B1F7",
 #' @importFrom scales div_gradient_pal muted
 #'
 #' @rdname gradient-scale
-add_continuous_gradient2 <- function(map, var, low = muted("red"), mid = "white", high = muted("blue"), range = NULL) {
+add_continuous_gradient2 <- function(map, var, low = muted("red"), mid = "white", high = muted("blue"),
+                                     range = NULL, na_color = "#b8b8b8") {
   if (is.null(map$x$options$data))
     stop("No data !", call. = FALSE)
   var_ <- map$x$options$data[[var]]
@@ -246,6 +251,7 @@ add_continuous_gradient2 <- function(map, var, low = muted("red"), mid = "white"
     scale_var = var_scale,
     colors = c(colors, "#fafafa"),
     colors_legend = colors_legend,
+    na_color = na_color,
     legend_label = append(
       x = range(var_, na.rm = TRUE),
       values = diff(range(var_, na.rm = TRUE))/2,
