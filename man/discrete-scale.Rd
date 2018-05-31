@@ -7,7 +7,7 @@
 \title{Add discrete scale to a map}
 \usage{
 add_discrete_scale(map, var, palette = "viridis", direction = 1,
-  na_color = "#D8D8D8")
+  na_color = "#D8D8D8", labels_order = NULL)
 
 add_discrete_scale2(map, var, values, na_color = "#D8D8D8")
 }
@@ -23,6 +23,8 @@ If 1, the default, colors are ordered from darkest to lightest.
 If -1, the order of colors is reversed.}
 
 \item{na_color}{Color to use for missing values.}
+
+\item{labels_order}{Vector of unique values for changing order of labels in legend.}
 
 \item{values}{Named list mapping data values to colors.
 It's recommended to use Hex color code without alpha,

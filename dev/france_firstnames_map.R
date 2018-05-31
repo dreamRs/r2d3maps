@@ -81,9 +81,13 @@ fr_dept <- left_join(
 )
 
 
+
 # map
 d3_map(shape = fr_dept) %>%
-  add_discrete_scale(var = "prenom", palette = "viridis") %>%
+  add_discrete_scale(
+    var = "prenom", palette = "Set2",
+    labels_order = c(setdiff(unique(na.omit(fr_dept$prenom)), "AUTRE"), "AUTRE")
+  ) %>%
   add_tooltip(value = "<b>{name}</b>: {prenom}", .na = NULL) %>%
   add_legend(title = "Prénoms") %>%
   add_labs(
@@ -100,8 +104,8 @@ d3_map(shape = fr_dept) %>%
       "JULIE" = "cornflowerblue",
       "LAURA" = "gold",
       "MARION" = "mediumpurple",
-      "AUTRE" = "grey",
-      "AURÉLIE" = "forestgreen"
+      "AURÉLIE" = "forestgreen",
+      "AUTRE" = "grey"
     )
   ) %>%
   add_tooltip(value = "<b>{name}</b>: {prenom}", .na = NULL) %>%

@@ -11,6 +11,7 @@
 #'  If 1, the default, colors are ordered from darkest to lightest.
 #'  If -1, the order of colors is reversed.
 #' @param na_color Color to use for missing values.
+#' @param labels_order Vector of unique values for changing order of labels in legend.
 #'
 #' @export
 #'
@@ -56,13 +57,18 @@
 #'   add_discrete_scale(var = "region", palette = "Set1") %>%
 #'   add_legend(title = "County")
 #'
-add_discrete_scale <- function(map, var, palette = "viridis", direction = 1, na_color = "#D8D8D8") {
+add_discrete_scale <- function(map, var, palette = "viridis",
+                               direction = 1, na_color = "#D8D8D8",
+                               labels_order = NULL) {
   if (is.null(map$x$options$data))
     stop("No data !", call. = FALSE)
   var_ <- map$x$options$data[[var]]
   if (is.null(var_))
     stop("Invalid variable supplied to continuous scale !", call. = FALSE)
   values <- if (is.factor(var_)) levels(var_) else unique(var_[!is.na(var_)])
+  if (!is.null(labels_order)) {
+    values <- values[match(values, labels_order)]
+  }
   na <- anyNA(var_)
   n <- length(values)
   if (palette %in% c("viridis", "magma", "plasma", "inferno", "cividis")) {

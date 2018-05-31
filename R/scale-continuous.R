@@ -254,7 +254,7 @@ add_continuous_gradient2 <- function(map, var, low = muted("red"), mid = "white"
     na_color = na_color,
     legend_label = append(
       x = range(var_, na.rm = TRUE),
-      values = diff(range(var_, na.rm = TRUE))/2,
+      values = diff(abs(range(var_, na.rm = TRUE)))/2,
       after = 1
     ),
     gradient_id = paste0("gradient-", sample.int(1e9, 1))

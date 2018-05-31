@@ -13,18 +13,14 @@ You can install from Github:
 
 ```r
 source("https://install-github.me/dreamRs/r2d3maps")
+
+# or with devtools:
+devtools::install_github("dreamRs/r2d3maps")
 ```
 
-## Examples
+## Basic examples
 
-Create D3 maps from `sf` objects:
-
-![](img/africa_water_access.png)
-
-
-<br>
-
-Try it with NaturalEarth map data from [`rnaturalearth`](https://github.com/ropenscilabs/rnaturalearth) :
+Create D3 maps from `sf` objects, try it with NaturalEarth map data from [`rnaturalearth`](https://github.com/ropenscilabs/rnaturalearth) :
 
 ```r
 library( r2d3maps )
@@ -35,116 +31,131 @@ japan <- ne_states(country = "japan", returnclass = "sf")
 d3_map(shape = japan) %>%
   add_labs(title = "Japan")
 
-
-### New Zealand
-nz <- ne_states(country = "New Zealand", returnclass = "sf")
-nz <- sf::st_crop(nz, xmin = 159.104, ymin = -48.385, xmax = 193.601, ymax = -33.669)
-d3_map(shape = nz) %>%
-  add_labs(title = "New Zealand")
-```
-
-![](img/japan.png)
-![](img/new_zealand.png)
-
-
-
-```r
-library( r2d3maps )
-library( rnaturalearth )
-
 ### South America
 south_america <- ne_countries(continent = "south america", returnclass = "sf")
 d3_map(shape = south_america) %>%
   add_labs(title = "South America")
-
-
-### France
-fr_dept <- ne_states(country = "france", returnclass = "sf")
-fr_dept <- fr_dept[fr_dept$type_en %in% "Metropolitan department", ]
-
-d3_map(shape = fr_dept) %>%
-  add_labs(title = "France")
 ```
 
+![](img/japan.png)
 ![](img/south_america.png)
-![](img/france.png)
 
 
-With a shapefile read by `sf` (data from [data.sfgov.org](https://data.sfgov.org/Geographic-Locations-and-Boundaries/Bay-Area-ZIP-Codes/u5j3-svi6)):
+
+## Choropleth map
+
+### Continuous scale
+
+There is two way to plot a continuous variable: by defining intervals or using a gradient.
+
 
 ```r
+# Packages
 library( r2d3maps )
 library( sf )
+library( CARTElette ) # devtools::install_github("antuki/CARTElette/CARTElette@RPackage")
+library( dplyr )
+library( rmapshaper )
 
-bay_area <- read_sf("dev/bay-area/geo_export_bb694795-f052-42b5-a0a1-01db0b2d41a6.shp")
+# map data
+dept <- loadMap(nivsupra = "DEP")      # shapes
+dept <- st_transform(dept, crs = 4326) # changing coordinates
+dept <- ms_simplify(dept)              # simplify shapes
 
-d3_map(shape = bay_area) %>%
-  add_labs(title = "Bay Area") %>%
-  add_tooltip(value = "{po_name}")
+# add population data
+data("pop_fr", package = "r2d3maps")
+dept <- left_join(
+  x = dept,
+  y = pop_fr,
+  by = c("DEP" = "code_departement")
+)
+
+# draw map
+d3_map(dept) %>%
+  add_continuous_breaks(var = "population_totale", na_color = "#b8b8b8") %>%
+  add_legend(d3_format = ".2s") %>%
+  add_tooltip(value = "{nom} : {population_totale}")
 ```
+![](img/choropleth_france.png)
 
-![](img/bay_area.png)
+With a gradient:
+
+```r
+d3_map(dept) %>%
+  add_continuous_gradient(var = "population_totale") %>%
+  add_legend(d3_format = ".2s") %>%
+  add_tooltip(value = "{nom} : {population_totale}")
+```
+![](img/choropleth_france2.png)
 
 
-
-## Projection
-
-Input data must be in WGS84, but you can use a different projection with D3:
+You can also use a diverging colour gradient:
 
 ```r
 library( r2d3maps )
 library( rnaturalearth )
+library( dplyr )
 
-us <- ne_states(country = "united states of america", returnclass = "sf")
-us <- filter(us, !name %in% c("Alaska", "Hawaii"))
+# shapes
+ireland <- ne_states(country = "ireland", returnclass = "sf")
 
-# Mercator
-d3_map(shape = us) %>%
-  add_labs(title = "US (mercator)")
+# add data
+data("pop_irl")
+ireland <- left_join(
+  x = ireland,
+  y = pop_irl
+)
 
-# Albers
-d3_map(shape = us, projection = "Albers") %>%
-  add_labs(title = "US (albers)")
+# draw map
+d3_map(shape = ireland, stroke_col = "#585858") %>%
+  add_tooltip(value = "{woe_name}: {changes_percentage}%") %>% 
+  add_continuous_gradient2(var = "changes_percentage", range = c(-9, 9)) %>% 
+  add_legend(title = "Changes in population (2011-2016)", suffix = "%") %>% 
+  add_labs(
+    title = "Ireland",
+    caption = "Data from NaturalEarth"
+  )
 ```
-
-![](img/us_mercator.png)
-![](img/us_albers.png)
-
-
-To bring back Alaska and Hawaii, see this [script](https://github.com/dreamRs/r2d3maps/blob/master/dev/us.R) (adapted from this [one](https://rud.is/b/2014/11/16/moving-the-earth-well-alaska-hawaii-with-r/) by [@hrbrmstr](https://github.com/hrbrmstr))
-
-
-![](img/usaea_albers.png)
+![](img/choropleth_ireland.png)
 
 
 
-## Simplify polygons
+### Discrete scale
 
-To draw lot of polygons, consider using [`rmapshaper`](https://github.com/ateucher/rmapshaper) by [@ateucher](https://github.com/ateucher):
-
+Plot categorical variables, you can use a color palette or manual values:
 
 ```r
-library( sf )
-library( rmapshaper )
+# map data
+fr_dept <- ne_states(country = "france", returnclass = "sf")
+fr_dept <- fr_dept[fr_dept$type_en %in% "Metropolitan department", ]
 
-# shapefiles from: https://data.london.gov.uk/dataset/statistical-gis-boundary-files-london
+# firstnames data
+data("prenoms_fr", package = "r2d3maps")
+prenoms_fr_89 <- prenoms_fr %>%
+  filter(annais == 1989, sexe == 2) %>%
+  group_by(preusuel) %>%
+  mutate(n = n()) %>%
+  ungroup() %>%
+  mutate(prenom = if_else(n < 2, "AUTRE", preusuel))
 
-london <- read_sf("dev/London-wards-2014/London-wards-2014_ESRI/London_Ward.shp")
-london <- st_transform(london, crs = 4326)
+fr_dept <- left_join(
+  x = fr_dept,
+  y = prenoms_fr_89,
+  by = "adm1_code"
+)
 
-london2 <- ms_simplify(london)
-
-# pryr::object_size(london)
-# ##> 2.96 MB
-# pryr::object_size(london2)
-# ##> 532 kB
-
-d3_map(shape = london2) %>%
-  add_tooltip("{NAME}") %>%
-  add_labs("London city")
+# draw map
+d3_map(shape = fr_dept) %>%
+  add_discrete_scale(
+    var = "prenom", palette = "Set2",
+    labels_order = c(setdiff(unique(na.omit(fr_dept$prenom)), "AUTRE"), "AUTRE")
+  ) %>%
+  add_tooltip(value = "<b>{name}</b>: {prenom}", .na = NULL) %>%
+  add_legend(title = "Prénoms") %>%
+  add_labs(
+    title = "Prénoms féminins les plus attribués en 1989",
+    caption = "Data: Insee"
+  )
 ```
-
-![](img/london.gif)
-
-
+![](img/choropleth_france3.png)
 
