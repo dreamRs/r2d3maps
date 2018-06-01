@@ -1,5 +1,5 @@
 Package: r2d3maps
-Version: 0.0.0.9200
+Version: 0.0.0.9300
 Title: Create Maps with D3
 Description: Tools to create interactive maps in D3 with 'r2d3'.
 Authors@R: c(
@@ -20,6 +20,7 @@ Imports:
     scales,
     classInt,
     glue,
-    magrittr
+    magrittr,
+    rstudioapi
 Suggests: rnaturalearth, sf
 RoxygenNote: 6.0.1
