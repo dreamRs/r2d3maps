@@ -159,3 +159,28 @@ d3_map(shape = fr_dept) %>%
 ```
 ![](img/choropleth_france3.png)
 
+
+### Make your own
+
+Use `r2d3map` with an `sf` object to convert it to topojson and use a custom JavaScript script like in `r2d3`:
+
+```r
+library(r2d3maps)
+library(rnaturalearth)
+
+# Data ----
+Indonesia <- ne_states(country = "Indonesia", returnclass = "sf")
+
+# Map ----
+r2d3map(
+  data = Indonesia,
+  script = "my_map.js"
+)
+```
+
+Create a minimal template with `use_r2d3map`, this will create 3 scripts (R, JS & CSS) to draw maps:
+
+```r
+use_r2d3map("my_map.R")
+```
+
