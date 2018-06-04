@@ -21,6 +21,7 @@ Imports:
     classInt,
     glue,
     magrittr,
-    rstudioapi
+    rstudioapi,
+    shiny
 Suggests: rnaturalearth, sf
 RoxygenNote: 6.0.1

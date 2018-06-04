@@ -191,6 +191,28 @@ r2d3.onRender(function(json, svg, width, height, options) {
               .attr("stroke-width", options.stroke_width + "px")
               .attr("d", path);
 
+        if (HTMLWidgets.shinyMode) {
+          Shiny.addCustomMessageHandler('update-r2d3maps-continuous-breaks',
+            function(proxy) {
+              if (typeof proxy.data.colors != 'undefined') {
+                color.range(proxy.data.colors);
+              }
+              map
+                  .transition()
+              		.duration(750)
+              		//.ease("linear")
+              		//.attr("fill", "#fafafa")
+              		.attr("fill", function(d) {
+              			if (d.properties[proxy.data.color_var] == 'NA') {
+                      return options.colors.na_color;
+                    } else {
+                      return color(d.properties[proxy.data.color_var]);
+                    }
+              		})
+              		.attr("d", path);
+          });
+        }
+
       }
 
       if (options.colors.color_type == 'continuous-gradient') {
