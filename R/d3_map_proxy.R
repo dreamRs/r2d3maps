@@ -28,16 +28,12 @@ d3_map_proxy <- function(shinyId, data = NULL, session = shiny::getDefaultReacti
     shinyId <- session$ns(shinyId)
   }
 
-  if (!is.null(data)) {
-    data <- extract_data(data)
-  }
-
   structure(
     list(
       session = session,
       id = shinyId,
       x = structure(
-        list(data = data)
+        list(data = extract_data(data))
       )
     ),
     class = "d3_map_proxy"
@@ -74,7 +70,9 @@ extract_data.sf <- function(x) {
   x[[colsf]] <- NULL
   return(x)
 }
-
+extract_data.NULL <- function(x) {
+  NULL
+}
 
 
 #' Update a continuous scale in Shiny
