@@ -74,3 +74,31 @@
 #' }
 #' @source \href{https://www.cso.ie/en/releasesandpublications/ep/p-cpr/censusofpopulation2016-preliminaryresults/geochan/}{Central Statistics Office}
 "pop_irl"
+
+
+
+
+#' Simple Feature of Paris with population data.
+#'
+#'
+#' @format A \code{sf} object with 20 features and 14 fields:
+#' \describe{
+#'   \item{CODE_INSEE}{Code ADM1 (for join with NaturalEarth data)}
+#'   \item{LIB}{Population in 2011}
+#'   \item{NAME}{Population in 2016}
+#'   \item{AGE_00}{Population under 3}
+#'   \item{AGE_03}{3 to 5}
+#'   \item{AGE_06}{6 to 10}
+#'   \item{AGE_11}{11 to 17}
+#'   \item{AGE_18}{18 to 24}
+#'   \item{AGE_25}{25 to 39}
+#'   \item{AGE_40}{40 to 54}
+#'   \item{AGE_55}{55 to 64}
+#'   \item{AGE_65}{65 to 79}
+#'   \item{AGE_80}{80 or more}
+#'   \item{TOTAL}{Population total}
+#'   \item{AGE_55}{sf column}
+#' }
+#' @source \href{https://www.insee.fr/fr/statistiques/2863610?sommaire=2867849}{INSEE (population data)},
+#' \href{https://opendata.paris.fr/explore/dataset/arrondissements/}{opendata.paris (shapes)}
+"paris"
