@@ -108,6 +108,7 @@ add_continuous_breaks <- function(map, var, palette = "viridis", direction = 1,
       colors <- rev(colors)
     }
   }
+  map$x$options$cartogram <- TRUE
   .r2d3map_opt(
     map = map, name = "colors",
     color_type = "continuous-breaks",
