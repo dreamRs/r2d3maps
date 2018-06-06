@@ -207,10 +207,25 @@ r2d3.onRender(function(json, div, width, height, options) {
               function(proxy) {
                 if (typeof proxy.data.colors != 'undefined') {
                   color.range(proxy.data.colors);
+                  x.domain(proxy.data.range_var);
+                  if (options.legend) {
+                    gc.selectAll("rect").remove();
+                    gc.selectAll("rect")
+                        .data(color.range().map(function(d) {
+                            d = color.invertExtent(d);
+                            if (d[0] === null) d[0] = x.domain()[0];
+                            if (d[1] === null) d[1] = x.domain()[1];
+                            return d;
+                          }))
+                        .enter().append("rect")
+                          .attr("height", 8)
+                          .attr("x", function(d) { return x(d[0]); })
+                          .attr("width", function(d) { return x(d[1]) - x(d[0]); })
+                          .attr("fill", function(d) { return color(d[0]); });
+                  }
                 }
 
-                map
-                    .transition()
+                map.transition()
                 		.duration(750)
                 		//.ease("linear")
                 		//.attr("fill", "#fafafa")

@@ -141,3 +141,47 @@ update_continuous_breaks <- function(proxy, var, palette = NULL, direction = 1, 
 }
 
 
+
+
+update_continuous_gradient <- function(proxy, var, low = NULL, high = NULL, range = NULL) {
+  if (!"d3_map_proxy" %in% class(proxy))
+    stop("This function must be used with a d3_map_proxy object", call. = FALSE)
+  data <- proxy$x$data
+  if (is.null(data))
+    stop("No data provided!", call. = FALSE)
+  var_ <- data[[var]]
+  if (is.null(var_)) {
+    warning("Invalid variable!", call. = FALSE)
+    return(invisible(proxy))
+  }
+  if (!is.null(range))
+    var_ <- c(var_, range)
+  var_ <- sort(unique(var_))
+  var_scale <- rescale(var_, to = c(0, 1))
+  if (!is.null(low) & !is.null(high)) {
+    pal <- seq_gradient_pal(low = low, high = high)
+    colors <- pal(var_scale)
+    colors_legend <- pal(seq(from = 0, to = 1, along.with = var_scale))
+  } else {
+    colors <- NULL
+    colors_legend <- NULL
+  }
+  .r2d3maps_proxy(
+    proxy = proxy,
+    name = "continuous-gradient",
+    color_var = var,
+    range_var = var_,
+    scale_var = var_scale,
+    colors = if (!is.null(colors)) c(colors, "#fafafa") else NULL,
+    colors_legend = colors_legend,
+    legend_label = append(
+      x = range(var_, na.rm = TRUE),
+      values = diff(range(var_, na.rm = TRUE))/2,
+      after = 1
+    )
+  )
+}
+
+
+
+
