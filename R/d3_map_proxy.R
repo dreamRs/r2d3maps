@@ -54,27 +54,6 @@ d3_map_proxy <- function(shinyId, data = NULL, session = shiny::getDefaultReacti
 
 
 
-# helper to extract data
-extract_data <- function(x) {
-  UseMethod("extract_data")
-}
-extract_data.SpatialPolygonsDataFrame <- function(x) {
-  return(x@data)
-}
-extract_data.data.frame <- function(x) {
-  return(x)
-}
-extract_data.sf <- function(x) {
-  x <- as.data.frame(x)
-  colsf <- attr(x, "sf_column")
-  x[[colsf]] <- NULL
-  return(x)
-}
-extract_data.NULL <- function(x) {
-  NULL
-}
-
-
 #' Update a continuous scale in Shiny
 #'
 #' @param proxy A \code{d3_map_proxy} object.
@@ -99,13 +78,6 @@ extract_data.NULL <- function(x) {
 update_continuous_breaks <- function(proxy, var, palette = NULL, direction = 1, n_breaks = 5, style = "pretty") {
   if (!"d3_map_proxy" %in% class(proxy))
     stop("This function must be used with a d3_map_proxy object", call. = FALSE)
-  palette <- match.arg(
-    arg = palette,
-    choices = c("viridis", "magma", "plasma", "inferno", "cividis",
-                "Blues", "BuGn", "BuPu", "GnBu", "Greens",
-                "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples",
-                "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd")
-  )
   data <- proxy$x$data
   if (is.null(data))
     stop("No data provided!", call. = FALSE)
@@ -114,29 +86,18 @@ update_continuous_breaks <- function(proxy, var, palette = NULL, direction = 1, 
     warning("Invalid variable!", call. = FALSE)
     return(invisible(proxy))
   }
-  range_col <- classIntervals(var = var_, n = n_breaks, style = style)$brks
-  n_breaks <- length(range_col) - 1
-  if (!is.null(palette)) {
-    if (palette %in% c("viridis", "magma", "plasma", "inferno", "cividis")) {
-      colors <- viridis_pal(option = palette, direction = direction)(n_breaks)
-      colors <- substr(colors, 1, 7)
-    } else {
-      pal <- col_numeric(palette = palette, domain = 0:100, na.color = "#808080")
-      colors <- pal(seq(from = 20, to = 100, length.out = n_breaks + 1))
-      if (direction > 0) {
-        colors <- rev(colors)
-      }
-    }
-  } else {
-    colors <- NULL
-  }
   .r2d3maps_proxy(
     proxy = proxy,
     name = "continuous-breaks",
     color_var = var,
-    range_var = c(0, max(var_, na.rm = TRUE)),
-    range_col = range_col,
-    colors = if (!is.null(colors)) c("#fafafa", colors) else NULL
+    scale = scale_breaks(
+      data = data,
+      vars = var,
+      palette = palette,
+      direction = direction,
+      n_breaks = n_breaks,
+      style = style
+    )
   )
 }
 

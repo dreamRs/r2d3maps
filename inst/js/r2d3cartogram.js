@@ -1,11 +1,18 @@
 
 // D3 cartogram
 
-r2d3.onRender(function(json, svg, width, height, options) {
+if (options.select) {
+  div.append("div")
+   .html(options.select_opts.select_html);
+}
+
+var svg = div.append("svg");
+
+r2d3.onRender(function(json, div, width, height, options) {
 
   var projection, active = d3.select(null);
 
-  var key, colorScale;
+  var key, colorScale, new_range;
 
 
   if (options.projection == "Mercator") {
@@ -64,9 +71,12 @@ r2d3.onRender(function(json, svg, width, height, options) {
   } else {
 
     key = options.colors.color_var;
-    color = d3.scaleThreshold()
-               .domain(options.colors.range_col)
-               .range(options.colors.colors);
+    var colors_brk = options.colors.scale[key].colors;
+    var var_brk = options.colors.scale[key].breaks_var;
+    var var_rng = options.colors.scale[key].range_var;
+    colorScale = d3.scaleThreshold()
+               .domain(var_brk)
+               .range(colors_brk);
 
     //var states = svg.append("g");
     var layer = g.attr("id", "layer"),
@@ -104,6 +114,19 @@ r2d3.onRender(function(json, svg, width, height, options) {
       //console.log(JSON.stringify(dataById));
       init();
       update();
+
+    if (options.select) {
+      var selectInput = d3.select("#" + options.select_opts.id);
+      selectInput.on("change", function(e) {
+        key = options.select_opts.choices[this.selectedIndex];
+        var_brk = options.colors.scale[key].breaks_var;
+        colors_brk = options.colors.scale[key].colors;
+        colorScale.domain(var_brk);
+        colorScale.range(colors_brk);
+    		update();
+      });
+
+    }
 
     function init() {
       var features = carto.features(json, geometries),
@@ -166,7 +189,7 @@ r2d3.onRender(function(json, svg, width, height, options) {
     		// normalize the scale to positive numbers
     		var scale2 = d3.scaleLinear()
     			.domain([lo, hi])
-    			.range([1, 100]);
+    			.range([1, 200]);
     		//console.log(scale2.domain());
     		// tell the cartogram to use the scaled values
     		carto.value(function(d) {
@@ -182,7 +205,7 @@ r2d3.onRender(function(json, svg, width, height, options) {
     			.duration(750)
     			.ease(d3.easeLinear)
     			.attr("fill", function(d) {
-    				return color(value(d));
+    				return colorScale(value(d));
     			})
     			.attr("d", carto.path);
     	}

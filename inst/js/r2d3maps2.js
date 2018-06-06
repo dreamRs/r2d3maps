@@ -135,12 +135,17 @@ r2d3.onRender(function(json, div, width, height, options) {
       // continuous breaks colors
       if (options.colors.color_type == 'continuous-breaks') {
 
+        var key_brk = options.colors.color_var;
+        var colors_brk = options.colors.scale[key_brk].colors;
+        var var_brk = options.colors.scale[key_brk].breaks_var;
+        var var_rng = options.colors.scale[key_brk].range_var;
+
         var x = d3.scaleLinear()
                   .range([1, 200])
-                  .domain(options.colors.range_var);
-        var color = d3.scaleThreshold()
-                      .domain(options.colors.range_col)
-                      .range(options.colors.colors);
+                  .domain(var_rng);
+        var colorBreaks = d3.scaleThreshold()
+                            .domain(var_brk)
+                            .range(colors_brk);
 
         if (options.legend) {
           var gc = svg.append("g")
@@ -148,8 +153,8 @@ r2d3.onRender(function(json, div, width, height, options) {
             .attr("transform", "translate(10," + (height - 30) + ")");
 
           gc.selectAll("rect")
-            .data(color.range().map(function(d) {
-                d = color.invertExtent(d);
+            .data(colorBreaks.range().map(function(d) {
+                d = colorBreaks.invertExtent(d);
                 if (d[0] === null) d[0] = x.domain()[0];
                 if (d[1] === null) d[1] = x.domain()[1];
                 return d;
@@ -158,7 +163,7 @@ r2d3.onRender(function(json, div, width, height, options) {
               .attr("height", 8)
               .attr("x", function(d) { return x(d[0]); })
               .attr("width", function(d) { return x(d[1]) - x(d[0]); })
-              .attr("fill", function(d) { return color(d[0]); });
+              .attr("fill", function(d) { return colorBreaks(d[0]); });
 
           gc.append("text")
             .attr("class", "caption")
@@ -178,7 +183,7 @@ r2d3.onRender(function(json, div, width, height, options) {
                   return options.legend_opts.prefix + x + options.legend_opts.suffix;
                 }
               })
-              .tickValues(color.domain()))
+              .tickValues(colorBreaks.domain()))
             .select(".domain")
               .remove();
         }
@@ -190,11 +195,11 @@ r2d3.onRender(function(json, div, width, height, options) {
             .enter().append("path")
               .attr("fill", function(d) {
                 //console.log(d.properties[options.colors.color_var]);
-                var value = d.properties[options.colors.color_var];
+                var value = d.properties[key_brk];
                 if (value == 'NA' | value == 'NaN') {
                   return options.colors.na_color;
                 } else {
-                  return color(value);
+                  return colorBreaks(value);
                 }
               })
               .attr("stroke", options.stroke_col)
@@ -205,14 +210,18 @@ r2d3.onRender(function(json, div, width, height, options) {
           if (typeof id != 'undefined') {
             Shiny.addCustomMessageHandler('update-r2d3maps-continuous-breaks-' + id,
               function(proxy) {
-                if (typeof proxy.data.colors != 'undefined') {
-                  color.range(proxy.data.colors);
-                  x.domain(proxy.data.range_var);
+                key_brk = proxy.data.color_var;
+                colors_brk = proxy.data.scale[key_brk].colors;
+                var_brk = proxy.data.scale[key_brk].breaks_var;
+                var_rng = proxy.data.scale[key_brk].range_var;
+                if (typeof colors_brk != 'undefined') {
+                  colorBreaks.range(colors_brk);
+                  x.domain(var_rng);
                   if (options.legend) {
                     gc.selectAll("rect").remove();
                     gc.selectAll("rect")
-                        .data(color.range().map(function(d) {
-                            d = color.invertExtent(d);
+                        .data(colorBreaks.range().map(function(d) {
+                            d = colorBreaks.invertExtent(d);
                             if (d[0] === null) d[0] = x.domain()[0];
                             if (d[1] === null) d[1] = x.domain()[1];
                             return d;
@@ -221,7 +230,7 @@ r2d3.onRender(function(json, div, width, height, options) {
                           .attr("height", 8)
                           .attr("x", function(d) { return x(d[0]); })
                           .attr("width", function(d) { return x(d[1]) - x(d[0]); })
-                          .attr("fill", function(d) { return color(d[0]); });
+                          .attr("fill", function(d) { return colorBreaks(d[0]); });
                   }
                 }
 
@@ -230,10 +239,10 @@ r2d3.onRender(function(json, div, width, height, options) {
                 		//.ease("linear")
                 		//.attr("fill", "#fafafa")
                 		.attr("fill", function(d) {
-                			if (d.properties[proxy.data.color_var] == 'NA') {
+                			if (d.properties[key_brk] == 'NA') {
                         return options.colors.na_color;
                       } else {
-                        return color(d.properties[proxy.data.color_var]);
+                        return colorBreaks(d.properties[key_brk]);
                       }
                 		})
                 		.attr("d", path);

@@ -46,19 +46,17 @@ d3_map <- function(shape, projection = "Mercator", stroke_col = "#fff", stroke_w
 
   # convert to geojson
   suppressWarnings({
-    shape <- geojson_json(input = shape)
+    shape_json <- geojson_json(input = shape)
   })
 
   # keep data
-  data <- geojson_sf(shape)
-  data <- as.data.frame(data)
-  data$geometry <- NULL
+  data <- extract_data(shape)
 
   # convert to topojson
-  shape <- geo2topo(x = shape, object_name = "states")
+  shape_topo <- geo2topo(x = shape_json, object_name = "states")
 
   map <- r2d3(
-    data = shape,
+    data = shape_topo,
     d3_version = 5, container = "div",
     dependencies = c(
       system.file("js/topojson.min.js", package = "r2d3maps"),

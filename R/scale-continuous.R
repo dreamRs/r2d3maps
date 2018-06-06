@@ -16,9 +16,7 @@
 #'
 #' @export
 #'
-#' @importFrom scales col_numeric viridis_pal
 #' @importFrom utils type.convert
-#' @importFrom classInt classIntervals
 #'
 #' @examples
 #' library( r2d3maps )
@@ -79,46 +77,74 @@
 #'
 add_continuous_breaks <- function(map, var, palette = "viridis", direction = 1,
                                  n_breaks = 5, style = "pretty", na_color = "#b8b8b8") {
-  palette <- match.arg(
-    arg = palette,
-    choices = c("viridis", "magma", "plasma", "inferno", "cividis",
-                "Blues", "BuGn", "BuPu", "GnBu", "Greens",
-                "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples",
-                "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd")
-  )
   if (is.null(map$x$options$data))
     stop("No data !", call. = FALSE)
   var_ <- map$x$options$data[[var]]
   if (is.null(var_))
     stop("Invalid variable supplied to continuous scale !", call. = FALSE)
-
-  if (is.character(var_))
-    var_ <- type.convert(var_)
-  if (!is.numeric(var_))
-    stop("'var' must be a numeric vector!", call. = FALSE)
-  range_col <- classIntervals(var = var_, n = n_breaks, style = style)$brks
-  n_breaks <- length(range_col) - 1
-  if (palette %in% c("viridis", "magma", "plasma", "inferno", "cividis")) {
-    colors <- viridis_pal(option = palette, direction = direction)(n_breaks)
-    colors <- substr(colors, 1, 7)
-  } else {
-    pal <- col_numeric(palette = palette, domain = 0:100, na.color = "#808080")
-    colors <- pal(seq(from = 20, to = 100, length.out = n_breaks + 1))
-    if (direction > 0) {
-      colors <- rev(colors)
-    }
-  }
   map$x$options$cartogram <- TRUE
   .r2d3map_opt(
     map = map, name = "colors",
     color_type = "continuous-breaks",
     color_var = var,
-    range_var = c(0, max(var_, na.rm = TRUE)),
-    range_col = range_col,
-    na_color = na_color,
-    colors = c("#fafafa", colors)
+    scale = scale_breaks(
+      data = map$x$options$data,
+      vars = base::union(var, map$x$options$select_opts$choices),
+      palette = palette,
+      direction = direction,
+      n_breaks = n_breaks,
+      style = style
+    ),
+    na_color = na_color
   )
 }
+
+#' @importFrom scales col_numeric viridis_pal
+#' @importFrom classInt classIntervals
+#' @importFrom stats setNames
+scale_breaks <- function(data, vars, palette = "viridis", direction = 1, n_breaks = 5, style = "pretty") {
+  if (is.null(vars)) {
+    return(NULL)
+  } else {
+    if (!is.null(palette)) {
+      palette <- match.arg(
+        arg = palette,
+        choices = c("viridis", "magma", "plasma", "inferno", "cividis",
+                    "Blues", "BuGn", "BuPu", "GnBu", "Greens",
+                    "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples",
+                    "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd")
+      )
+    }
+    lapply(
+      X = setNames(vars, vars),
+      FUN = function(x) {
+        var <- data[[x]]
+        breaks_var <- classIntervals(var = var, n = n_breaks, style = style)$brks
+        n_breaks <- length(breaks_var) - 1
+        if (is.null(palette)) {
+          colors <- NULL
+        } else {
+          if (palette %in% c("viridis", "magma", "plasma", "inferno", "cividis")) {
+            colors <- viridis_pal(option = palette, direction = direction)(n_breaks)
+            colors <- substr(colors, 1, 7)
+          } else {
+            pal <- col_numeric(palette = palette, domain = 0:100, na.color = "#808080")
+            colors <- pal(seq(from = 10, to = 100, length.out = n_breaks + 1))
+            if (direction > 0) {
+              colors <- rev(colors)
+            }
+          }
+        }
+        list(
+          range_var = c(0, max(var, na.rm = TRUE)),
+          breaks_var = breaks_var,
+          colors = if (!is.null(colors)) c("#fafafa", colors) else NULL
+        )
+      }
+    )
+  }
+}
+
 
 
 

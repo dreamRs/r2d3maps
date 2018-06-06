@@ -41,7 +41,9 @@ d3_cartogram <- function(shape, projection = "Mercator", stroke_col = "#fff", st
   raw_data$id <- as.character(seq_len(nrow(raw_data)))
 
   r2d3(
-    data = geo_topo, d3_version = 5,
+    data = geo_topo,
+    d3_version = 5,
+    container = "div",
     dependencies = c(
       system.file("js/topojson.min.js", package = "r2d3maps"),
       system.file("js/d3-cartogram.min.js", package = "r2d3maps")

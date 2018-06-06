@@ -5,6 +5,8 @@
 
 
 
+# Ireland -----------------------------------------------------------------
+
 library( r2d3maps )
 library( rnaturalearth )
 
@@ -23,4 +25,24 @@ d3_cartogram(shape = ireland)
 # add continuous scale to modify shapes
 d3_cartogram(shape = ireland) %>%
   add_continuous_breaks(var = "foo2", palette = "Blues")
+
+
+
+
+
+# Paris -------------------------------------------------------------------
+
+library(r2d3maps)
+data("paris")
+
+d3_cartogram(shape = paris) %>%
+  add_continuous_breaks(var = "AGE_00", palette = "Blues")
+
+
+d3_cartogram(shape = paris) %>%
+  add_select_input(label = "Choose a var:", choices = grep(pattern = "AGE", x = names(paris), value = TRUE)) %>%
+  add_continuous_breaks(var = "AGE_03", palette = "Blues")
+
+
+
 
