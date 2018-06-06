@@ -43,7 +43,7 @@ ui <- fluidPage(
     column(
       width = 10, offset = 1,
       tags$h2("Example proxy"),
-      d3Output(outputId = "mymap"),
+      d3Output(outputId = "mymap", width = "600px", height = "500px"),
       radioButtons(
         inputId = "var",
         label = "Indicator:",

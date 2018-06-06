@@ -1,8 +1,16 @@
 // D3 maps
 
+var el = div.node();
+var shadowRoot = el.parentNode;
+var host = shadowRoot.host;
+var id;
+if (typeof host != 'undefined') {
+  id = host.id;
+}
+//console.log(id);
 
-r2d3.onRender(function(json, svg, width, height, options) {
-
+r2d3.onRender(function(json, div, width, height, options) {
+  //console.log(JSON.stringify(svg.select(function() { return this.parentNode.id; })));
   // utils
   // https://gist.github.com/mbostock/4699541
   function clicked(d) {
@@ -52,6 +60,7 @@ r2d3.onRender(function(json, svg, width, height, options) {
   var path = d3.geoPath()
       .projection(projection);
 
+  var svg = div.append("svg");
   svg.attr("width", width)
      .attr("height", height);
 
@@ -73,7 +82,7 @@ r2d3.onRender(function(json, svg, width, height, options) {
       .translate(t);
 
   // Tooltip
-  var div = d3.select("body").append("div")
+  var divTooltip = div.append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
 
@@ -181,10 +190,11 @@ r2d3.onRender(function(json, svg, width, height, options) {
             .enter().append("path")
               .attr("fill", function(d) {
                 //console.log(d.properties[options.colors.color_var]);
-                if (d.properties[options.colors.color_var] == 'NA') {
+                var value = d.properties[options.colors.color_var];
+                if (value == 'NA' | value == 'NaN') {
                   return options.colors.na_color;
                 } else {
-                  return color(d.properties[options.colors.color_var]);
+                  return color(value);
                 }
               })
               .attr("stroke", options.stroke_col)
@@ -192,25 +202,29 @@ r2d3.onRender(function(json, svg, width, height, options) {
               .attr("d", path);
 
         if (HTMLWidgets.shinyMode) {
-          Shiny.addCustomMessageHandler('update-r2d3maps-continuous-breaks',
-            function(proxy) {
-              if (typeof proxy.data.colors != 'undefined') {
-                color.range(proxy.data.colors);
-              }
-              map
-                  .transition()
-              		.duration(750)
-              		//.ease("linear")
-              		//.attr("fill", "#fafafa")
-              		.attr("fill", function(d) {
-              			if (d.properties[proxy.data.color_var] == 'NA') {
-                      return options.colors.na_color;
-                    } else {
-                      return color(d.properties[proxy.data.color_var]);
-                    }
-              		})
-              		.attr("d", path);
-          });
+          if (typeof id != 'undefined') {
+            Shiny.addCustomMessageHandler('update-r2d3maps-continuous-breaks-' + id,
+              function(proxy) {
+                if (typeof proxy.data.colors != 'undefined') {
+                  color.range(proxy.data.colors);
+                }
+
+                map
+                    .transition()
+                		.duration(750)
+                		//.ease("linear")
+                		//.attr("fill", "#fafafa")
+                		.attr("fill", function(d) {
+                			if (d.properties[proxy.data.color_var] == 'NA') {
+                        return options.colors.na_color;
+                      } else {
+                        return color(d.properties[proxy.data.color_var]);
+                      }
+                		})
+                		.attr("d", path);
+            });
+          }
+
         }
 
       }
@@ -381,17 +395,19 @@ r2d3.onRender(function(json, svg, width, height, options) {
                   d3.select(this).attr("opacity", 0.5);
                   // console.log(options.tooltip_value[i]);
                   if (options.tooltip_value[i] !== null) {
-                    div.transition()
+                    var mouse = d3.mouse(this);
+                    //console.log(JSON.stringify(mouse));
+                    divTooltip.transition()
                       .duration(200)
                       .style("opacity", 0.9);
-                    div.html(options.tooltip_value[i])
-                      .style("left", (d3.event.pageX) + "px")
-                      .style("top", (d3.event.pageY - 28) + "px");
+                    divTooltip.html(options.tooltip_value[i])
+                      .style("left", (mouse[0]) + "px")
+                      .style("top", (mouse[1]) + "px");
                   }
                 })
             .on("mouseout", function(d) {
                     d3.select(this).attr("opacity", 1);
-                    div.transition()
+                    divTooltip.transition()
                         .duration(500)
                         .style("opacity", 0);
                 });

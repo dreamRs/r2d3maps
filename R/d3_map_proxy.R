@@ -45,7 +45,7 @@ d3_map_proxy <- function(shinyId, data = NULL, session = shiny::getDefaultReacti
 .r2d3maps_proxy <- function(proxy, name, ...) {
 
   proxy$session$sendCustomMessage(
-    type = sprintf("update-r2d3maps-%s", name),
+    type = sprintf("update-r2d3maps-%s-%s", name, proxy$id),
     message = list(id = proxy$id, data = list(...))
   )
 
