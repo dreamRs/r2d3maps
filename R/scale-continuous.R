@@ -138,14 +138,24 @@ scale_breaks <- function(data, vars, palette = "viridis", direction = 1, n_break
         list(
           range_var = c(0, max(var, na.rm = TRUE)),
           breaks_var = breaks_var,
-          colors = if (!is.null(colors)) c("#fafafa", colors) else NULL
+          colors = if (!is.null(colors)) c("#fafafa", colors) else NULL,
+          ticks = calc_legend_opts(breaks_var)
         )
       }
     )
   }
 }
 
-
+#' @importFrom utils head
+calc_legend_opts <- function(x) {
+  list(
+    rect_width = c(0, diff(x) / sum(diff(x)) * 300),
+    rect_x = round(head(c(0, 0, cumsum(diff(x) / sum(diff(x)) * 300)), -1)) + 1,
+    # axis_tick_pos = c(0, cumsum(diff(x) / sum(diff(x)) * 300)) / 3,
+    axis_tick_pos = scales::rescale(x = x, to = c(0, 300)),
+    axis_tick_lib = x
+  )
+}
 
 
 
@@ -281,6 +291,8 @@ scale_gradient <- function(data, vars, low = "#132B43", mid = NULL, high = "#56B
       X = setNames(vars, vars),
       FUN = function(x) {
         var_ <- data[[x]]
+        if (!is.null(range) && length(range) == 1 && range == "auto")
+          range <- range(pretty(x = var_, n = 5))
         if (!is.null(range))
           var_ <- c(var_, range)
         var_ <- sort(unique(var_))

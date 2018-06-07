@@ -139,9 +139,10 @@ r2d3.onRender(function(json, div, width, height, options) {
         var colors_brk = options.colors.scale[key_brk].colors;
         var var_brk = options.colors.scale[key_brk].breaks_var;
         var var_rng = options.colors.scale[key_brk].range_var;
+        var ticks_opts = options.colors.scale[key_brk].ticks;
 
         var x = d3.scaleLinear()
-                  .range([1, 200])
+                  .range([0, 300])
                   .domain(var_rng);
         var colorBreaks = d3.scaleThreshold()
                             .domain(var_brk)
@@ -149,21 +150,39 @@ r2d3.onRender(function(json, div, width, height, options) {
 
         if (options.legend) {
           var gc = svg.append("g")
+            .attr("width", 300)
             .attr("class", "key")
             .attr("transform", "translate(10," + (height - 30) + ")");
 
-          gc.selectAll("rect")
+          var rectbrk = gc.selectAll("rect")
             .data(colorBreaks.range().map(function(d) {
                 d = colorBreaks.invertExtent(d);
                 if (d[0] === null) d[0] = x.domain()[0];
                 if (d[1] === null) d[1] = x.domain()[1];
                 return d;
               }))
-            .enter().append("rect")
-              .attr("height", 8)
-              .attr("x", function(d) { return x(d[0]); })
-              .attr("width", function(d) { return x(d[1]) - x(d[0]); })
-              .attr("fill", function(d) { return colorBreaks(d[0]); });
+            .enter();
+          rectbrk.append("rect")
+                .attr("height", 8)
+                //.attr("x", function(d) { return x(d[0]); })
+                //.attr("width", function(d) { return x(d[1]) - x(d[0]); })
+                .attr("x", function(d, i) { return ticks_opts.rect_x[i]; })
+                .attr("width", function(d, i) { return ticks_opts.rect_width[i]; })
+                .attr("fill", function(d) { return colorBreaks(d[0]); });
+          rectbrk.insert("text")
+                .attr("class", "tick-label")
+                .attr("text-anchor", "middle")
+                .attr("font-size", "70%")
+                .attr("x", function(d, i) { return ticks_opts.axis_tick_pos[i]; })
+                .attr("y", 20)
+                .text(function(d, i) {
+                  var lib = ticks_opts.axis_tick_lib[i];
+                  if (options.legend_opts.d3_format) {
+                    return d3.format(options.legend_opts.d3_format)(lib);
+                  } else {
+                    return options.legend_opts.prefix + lib + options.legend_opts.suffix;
+                  }
+                });
 
           gc.append("text")
             .attr("class", "caption")
@@ -171,21 +190,11 @@ r2d3.onRender(function(json, div, width, height, options) {
             .attr("y", -6)
             .attr("fill", "#000")
             .attr("text-anchor", "start")
+            .attr("font-size", "80%")
             .attr("font-weight", "bold")
             .text(options.legend_opts.title);
 
-          gc.call(d3.axisBottom(x)
-              .tickSize(13)
-              .tickFormat(function(x, i) {
-                if (options.legend_opts.d3_format) {
-                  return d3.format(options.legend_opts.d3_format)(x);
-                } else {
-                  return options.legend_opts.prefix + x + options.legend_opts.suffix;
-                }
-              })
-              .tickValues(colorBreaks.domain()))
-            .select(".domain")
-              .remove();
+
         }
 
         map = g.append("g")
@@ -214,23 +223,43 @@ r2d3.onRender(function(json, div, width, height, options) {
                 colors_brk = proxy.data.scale[key_brk].colors;
                 var_brk = proxy.data.scale[key_brk].breaks_var;
                 var_rng = proxy.data.scale[key_brk].range_var;
+                ticks_opts =  proxy.data.scale[key_brk].ticks;
                 if (typeof colors_brk != 'undefined') {
                   colorBreaks.range(colors_brk);
+                  colorBreaks.domain(var_brk);
                   x.domain(var_rng);
                   if (options.legend) {
-                    gc.selectAll("rect").remove();
-                    gc.selectAll("rect")
+                    rectbrk.selectAll("rect").remove();
+                    rectbrk.selectAll("text.tick-label").remove();
+                    rectbrk = gc.selectAll("rect")
                         .data(colorBreaks.range().map(function(d) {
                             d = colorBreaks.invertExtent(d);
                             if (d[0] === null) d[0] = x.domain()[0];
                             if (d[1] === null) d[1] = x.domain()[1];
                             return d;
                           }))
-                        .enter().append("rect")
+                        .enter();
+
+                    rectbrk.append("rect")
                           .attr("height", 8)
-                          .attr("x", function(d) { return x(d[0]); })
-                          .attr("width", function(d) { return x(d[1]) - x(d[0]); })
+                          .attr("x", function(d, i) { return ticks_opts.rect_x[i]; })
+                          .attr("width", function(d, i) { return ticks_opts.rect_width[i]; })
                           .attr("fill", function(d) { return colorBreaks(d[0]); });
+                    rectbrk.insert("text")
+                          .attr("class", "tick-label")
+                          .attr("text-anchor", "middle")
+                          .attr("font-size", "70%")
+                          .attr("x", function(d, i) { return ticks_opts.axis_tick_pos[i]; })
+                          .attr("y", 20)
+                          .text(function(d, i) {
+                            var lib = ticks_opts.axis_tick_lib[i];
+                            if (options.legend_opts.d3_format) {
+                              return d3.format(options.legend_opts.d3_format)(lib);
+                            } else {
+                              return options.legend_opts.prefix + lib + options.legend_opts.suffix;
+                            }
+                          });
+
                   }
                 }
 
@@ -452,14 +481,15 @@ r2d3.onRender(function(json, div, width, height, options) {
       if (typeof options.labs.title != 'undefined') {
         var title = g.append("g")
             .attr("class", "title")
-            .attr("transform", "translate(10,20)");
+            .attr("transform", "translate(0,18)");
         title.append("text")
             .attr("class", "title")
             .attr("x", 0)
-            .attr("y", -2)
+            .attr("y", -4)
             .attr("fill", "#000")
             .attr("text-anchor", "start")
             .attr("font-weight", "bold")
+            .attr("font-size", "110%")
             .text(options.labs.title);
       }
       if (typeof options.labs.caption != 'undefined') {
