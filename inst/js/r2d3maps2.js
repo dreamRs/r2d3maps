@@ -254,12 +254,20 @@ r2d3.onRender(function(json, div, width, height, options) {
       }
 
       if (options.colors.color_type == 'continuous-gradient') {
+
+        var key_gdt1 = options.colors.color_var;
+        var colors_gdt1 = options.colors.scale[key_gdt1].colors;
+        var colors_leg_gdt1 = options.colors.scale[key_gdt1].colors_legend;
+        var leg_lab_gdt1 = options.colors.scale[key_gdt1].legend_label;
+        var scale_var_gdt1 = options.colors.scale[key_gdt1].scale_var;
+        var range_var_gdt1 = options.colors.scale[key_gdt1].range_var;
+
         // color scale for gradient
         var colorGradient = d3.scaleLinear()
-            .range(options.colors.colors)
-            .domain(options.colors.scale_var);
+            .range(colors_gdt1)
+            .domain(scale_var_gdt1);
         var colorInterpolateGradient = d3.scaleLinear()
-          	.domain(d3.extent(options.colors.range_var))
+          	.domain(d3.extent(range_var_gdt1))
           	.range([0,1]);
 
         // legend for gradient
@@ -280,9 +288,9 @@ r2d3.onRender(function(json, div, width, height, options) {
             .attr("y2", "0%");
           //Append multiple color stops by using D3's data/enter step
           linearGradient.selectAll("stop")
-              .data( options.colors.colors_legend )
+              .data( colors_leg_gdt1 )
               .enter().append("stop")
-              .attr("offset", function(d,i) { return i/(options.colors.colors_legend.length-1); })
+              .attr("offset", function(d,i) { return i/(colors_leg_gdt1.length-1); })
               .attr("stop-color", function(d) { return d; });
 
 
@@ -312,9 +320,9 @@ r2d3.onRender(function(json, div, width, height, options) {
           	.style("text-anchor", "middle")
           	.text(function() {
           	  if (options.legend_opts.d3_format) {
-          	    return d3.format(options.legend_opts.d3_format)(options.colors.legend_label[0]);
+          	    return d3.format(options.legend_opts.d3_format)(leg_lab_gdt1[0]);
           	  } else {
-          	    return options.legend_opts.prefix + options.colors.legend_label[0] + options.legend_opts.suffix;
+          	    return options.legend_opts.prefix + leg_lab_gdt1[0] + options.legend_opts.suffix;
           	  }
           	});
           linearGradientSvg.append("text")
@@ -324,9 +332,9 @@ r2d3.onRender(function(json, div, width, height, options) {
           	.style("text-anchor", "middle")
           	.text(function() {
           	  if (options.legend_opts.d3_format) {
-          	    return d3.format(options.legend_opts.d3_format)(options.colors.legend_label[1]);
+          	    return d3.format(options.legend_opts.d3_format)(leg_lab_gdt1[1]);
           	  } else {
-          	    return options.legend_opts.prefix + options.colors.legend_label[1] + options.legend_opts.suffix;
+          	    return options.legend_opts.prefix + leg_lab_gdt1[1] + options.legend_opts.suffix;
           	  }
           	});
           linearGradientSvg.append("text")
@@ -336,9 +344,9 @@ r2d3.onRender(function(json, div, width, height, options) {
           	.style("text-anchor", "middle")
           	.text(function() {
           	  if (options.legend_opts.d3_format) {
-          	    return d3.format(options.legend_opts.d3_format)(options.colors.legend_label[2]);
+          	    return d3.format(options.legend_opts.d3_format)(leg_lab_gdt1[2]);
           	  } else {
-          	    return options.legend_opts.prefix + options.colors.legend_label[2] + options.legend_opts.suffix;
+          	    return options.legend_opts.prefix + leg_lab_gdt1[2] + options.legend_opts.suffix;
           	  }
           	});
         }
@@ -349,10 +357,10 @@ r2d3.onRender(function(json, div, width, height, options) {
             .data(topojson.feature(json, json.objects.states).features)
             .enter().append("path")
               .attr("fill", function(d) {
-                if (d.properties[options.colors.color_var] == 'NA') {
+                if (d.properties[key_gdt1] == 'NA') {
                   return options.colors.na_color;
                 } else {
-                  return colorGradient(colorInterpolateGradient(d.properties[options.colors.color_var]));
+                  return colorGradient(colorInterpolateGradient(d.properties[key_gdt1]));
                 }
               })
               .attr("stroke", options.stroke_col)

@@ -164,7 +164,6 @@ scale_breaks <- function(data, vars, palette = "viridis", direction = 1, n_break
 #'
 #' @name gradient-scale
 #'
-#' @importFrom scales seq_gradient_pal rescale
 #'
 #' @examples
 #' library( r2d3maps )
@@ -213,32 +212,23 @@ add_continuous_gradient <- function(map, var, low = "#132B43", high = "#56B1F7",
   var_ <- map$x$options$data[[var]]
   if (is.null(var_))
     stop("Invalid variable supplied to continuous scale !", call. = FALSE)
-
   if (is.character(var_))
     var_ <- type.convert(var_)
   if (!is.numeric(var_))
     stop("'var' must be a numeric vector!", call. = FALSE)
-  if (!is.null(range))
-    var_ <- c(var_, range)
-  var_ <- sort(unique(var_))
-  pal <- seq_gradient_pal(low = low, high = high)
-  var_scale <- rescale(var_, to = c(0, 1))
-  colors <- pal(var_scale)
-  colors_legend <- pal(seq(from = 0, to = 1, along.with = var_scale))
   .r2d3map_opt(
     map = map, name = "colors",
     color_type = "continuous-gradient",
     color_var = var,
-    range_var = var_,
-    scale_var = var_scale,
-    colors = c(colors, "#fafafa"),
-    colors_legend = colors_legend,
-    na_color = na_color,
-    legend_label = append(
-      x = range(var_, na.rm = TRUE),
-      values = diff(range(var_, na.rm = TRUE))/2,
-      after = 1
+    scale = scale_gradient(
+      data = map$x$options$data,
+      vars =  base::union(var, map$x$options$select_opts$choices),
+      low = low,
+      mid = NULL,
+      high = high,
+      range = range
     ),
+    na_color = na_color,
     gradient_id = paste0("gradient-", sample.int(1e9, 1))
   )
 }
@@ -248,7 +238,7 @@ add_continuous_gradient <- function(map, var, low = "#132B43", high = "#56B1F7",
 #'
 #' @export
 #'
-#' @importFrom scales div_gradient_pal muted
+#' @importFrom scales muted
 #'
 #' @rdname gradient-scale
 add_continuous_gradient2 <- function(map, var, low = muted("red"), mid = "white", high = muted("blue"),
@@ -258,33 +248,69 @@ add_continuous_gradient2 <- function(map, var, low = muted("red"), mid = "white"
   var_ <- map$x$options$data[[var]]
   if (is.null(var_))
     stop("Invalid variable supplied to continuous scale !", call. = FALSE)
-
   if (is.character(var_))
     var_ <- type.convert(var_)
   if (!is.numeric(var_))
     stop("'var' must be a numeric vector!", call. = FALSE)
-  if (!is.null(range))
-    var_ <- c(var_, range)
-  var_ <- sort(unique(var_), na.last = TRUE)
-  pal <- div_gradient_pal(low = low, mid = mid, high = high)
-  var_scale <- rescale(var_, to = c(0, 1))
-  colors <- pal(var_scale)
-  colors_legend <- pal(seq(from = 0, to = 1, along.with = var_scale))
   .r2d3map_opt(
     map = map, name = "colors",
     color_type = "continuous-gradient",
     color_var = var,
-    range_var = var_,
-    scale_var = var_scale,
-    colors = c(colors, "#fafafa"),
-    colors_legend = colors_legend,
-    na_color = na_color,
-    legend_label = append(
-      x = range(var_, na.rm = TRUE),
-      values = diff(abs(range(var_, na.rm = TRUE)))/2,
-      after = 1
+    scale = scale_gradient(
+      data = map$x$options$data,
+      vars =  base::union(var, map$x$options$select_opts$choices),
+      low = low,
+      mid = mid,
+      high = high,
+      range = range
     ),
+    na_color = na_color,
     gradient_id = paste0("gradient-", sample.int(1e9, 1))
   )
 }
+
+
+
+#' @importFrom scales seq_gradient_pal div_gradient_pal rescale
+#' @importFrom stats setNames
+scale_gradient <- function(data, vars, low = "#132B43", mid = NULL, high = "#56B1F7", range = NULL) {
+  if (is.null(vars)) {
+    return(NULL)
+  } else {
+    lapply(
+      X = setNames(vars, vars),
+      FUN = function(x) {
+        var_ <- data[[x]]
+        if (!is.null(range))
+          var_ <- c(var_, range)
+        var_ <- sort(unique(var_))
+        if (!is.null(low) & !is.null(high)) {
+          if (is.null(mid)) {
+            pal <- seq_gradient_pal(low = low, high = high)
+          } else {
+            pal <- div_gradient_pal(low = low, mid = mid, high = high)
+          }
+        } else {
+          pal <- function(x) NULL
+        }
+        scale_var <- rescale(var_, to = c(0, 1))
+        colors <- pal(scale_var)
+        list(
+          range_var = var_,
+          scale_var = scale_var,
+          colors = if (!is.null(colors)) c(colors, "#fafafa") else NULL,
+          colors_legend = pal(seq(from = 0, to = 1, along.with = scale_var)),
+          legend_label = append(
+            x = range(var_, na.rm = TRUE),
+            values = diff(abs(range(var_, na.rm = TRUE)))/2,
+            after = 1
+          )
+        )
+      }
+    )
+  }
+}
+
+
+
 
