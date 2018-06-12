@@ -343,6 +343,7 @@ r2d3.onRender(function(json, div, width, height, options) {
           	.text(options.legend_opts.title);
 
           linearGradientSvg.append("text")
+            .attr("class", "tick-label")
           	.attr("x", 10)
           	.attr("y", height-5)
           	.style("font-size", 11)
@@ -355,6 +356,7 @@ r2d3.onRender(function(json, div, width, height, options) {
           	  }
           	});
           linearGradientSvg.append("text")
+            .attr("class", "tick-label")
           	.attr("x", widthLegend/2+5)
           	.attr("y", height-5)
           	.style("font-size", 11)
@@ -367,6 +369,7 @@ r2d3.onRender(function(json, div, width, height, options) {
           	  }
           	});
           linearGradientSvg.append("text")
+            .attr("class", "tick-label")
           	.attr("x", widthLegend)
           	.attr("y", height-5)
           	.style("font-size", 11)
@@ -395,6 +398,89 @@ r2d3.onRender(function(json, div, width, height, options) {
               .attr("stroke", options.stroke_col)
               .attr("stroke-width", options.stroke_width + "px")
               .attr("d", path);
+
+        if (HTMLWidgets.shinyMode) {
+            if (typeof id != 'undefined') {
+              Shiny.addCustomMessageHandler('update-r2d3maps-continuous-gradient-' + id,
+                function(proxy) {
+                  key_gdt1 = proxy.data.color_var;
+                  colors_gdt1 = proxy.data.scale[key_gdt1].colors;
+                  colors_leg_gdt1 = proxy.data.scale[key_gdt1].colors_legend;
+                  leg_lab_gdt1 = proxy.data.scale[key_gdt1].legend_label;
+                  scale_var_gdt1 = proxy.data.scale[key_gdt1].scale_var;
+                  range_var_gdt1 = proxy.data.scale[key_gdt1].range_var;
+
+                  colorGradient.domain(scale_var_gdt1);
+                  colorInterpolateGradient.domain(d3.extent(range_var_gdt1));
+                  colorGradient.range(colors_gdt1);
+
+                  if (options.legend) {
+                    linearGradient.selectAll("stop").remove();
+                    //Append multiple color stops by using D3's data/enter step
+                    linearGradient.selectAll("stop")
+                        .data( colors_leg_gdt1 )
+                        .enter().append("stop")
+                        .attr("offset", function(d,i) { return i/(colors_leg_gdt1.length-1); })
+                        .attr("stop-color", function(d) { return d; });
+
+                    linearGradientSvg.selectAll("text.tick-label").remove();
+                    linearGradientSvg.append("text")
+                      .attr("class", "tick-label")
+                    	.attr("x", 10)
+                    	.attr("y", height-5)
+                    	.style("font-size", 11)
+                    	.style("text-anchor", "middle")
+                    	.text(function() {
+                    	  if (options.legend_opts.d3_format) {
+                    	    return d3.format(options.legend_opts.d3_format)(leg_lab_gdt1[0]);
+                    	  } else {
+                    	    return options.legend_opts.prefix + leg_lab_gdt1[0] + options.legend_opts.suffix;
+                    	  }
+                    	});
+                    linearGradientSvg.append("text")
+                      .attr("class", "tick-label")
+                    	.attr("x", widthLegend/2+5)
+                    	.attr("y", height-5)
+                    	.style("font-size", 11)
+                    	.style("text-anchor", "middle")
+                    	.text(function() {
+                    	  if (options.legend_opts.d3_format) {
+                    	    return d3.format(options.legend_opts.d3_format)(leg_lab_gdt1[1]);
+                    	  } else {
+                    	    return options.legend_opts.prefix + leg_lab_gdt1[1] + options.legend_opts.suffix;
+                    	  }
+                    	});
+                    linearGradientSvg.append("text")
+                      .attr("class", "tick-label")
+                    	.attr("x", widthLegend)
+                    	.attr("y", height-5)
+                    	.style("font-size", 11)
+                    	.style("text-anchor", "middle")
+                    	.text(function() {
+                    	  if (options.legend_opts.d3_format) {
+                    	    return d3.format(options.legend_opts.d3_format)(leg_lab_gdt1[2]);
+                    	  } else {
+                    	    return options.legend_opts.prefix + leg_lab_gdt1[2] + options.legend_opts.suffix;
+                    	  }
+                    	});
+                  }
+
+                  map.transition()
+                		.duration(750)
+                		//.ease("linear")
+                		//.attr("fill", "#fafafa")
+                		.attr("fill", function(d) {
+                			if (d.properties[key_gdt1] == 'NA') {
+                        return options.colors.na_color;
+                      } else {
+                        return colorGradient(colorInterpolateGradient(d.properties[key_gdt1]));
+                      }
+                		})
+                		.attr("d", path);
+                }
+              );
+            }
+        }
       }
 
     } else {

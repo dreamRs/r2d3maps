@@ -67,7 +67,6 @@ d3_map_proxy <- function(shinyId, data = NULL, session = shiny::getDefaultReacti
 #'
 #' @export
 #'
-#' @importFrom classInt classIntervals
 #'
 #' @examples
 #' \dontrun{
@@ -104,6 +103,21 @@ update_continuous_breaks <- function(proxy, var, palette = NULL, direction = 1, 
 
 
 
+#' Update a gradient scale in Shiny
+#'
+#' @param proxy A \code{d3_map_proxy} object.
+#' @param var New var to use on the map.
+#' @param low,high Colours for low and high ends of the gradient.
+#' @param range A length two vector to force range of data.
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#'
+#' # todo
+#'
+#' }
 update_continuous_gradient <- function(proxy, var, low = NULL, high = NULL, range = NULL) {
   if (!"d3_map_proxy" %in% class(proxy))
     stop("This function must be used with a d3_map_proxy object", call. = FALSE)
@@ -115,30 +129,17 @@ update_continuous_gradient <- function(proxy, var, low = NULL, high = NULL, rang
     warning("Invalid variable!", call. = FALSE)
     return(invisible(proxy))
   }
-  if (!is.null(range))
-    var_ <- c(var_, range)
-  var_ <- sort(unique(var_))
-  var_scale <- rescale(var_, to = c(0, 1))
-  if (!is.null(low) & !is.null(high)) {
-    pal <- seq_gradient_pal(low = low, high = high)
-    colors <- pal(var_scale)
-    colors_legend <- pal(seq(from = 0, to = 1, along.with = var_scale))
-  } else {
-    colors <- NULL
-    colors_legend <- NULL
-  }
   .r2d3maps_proxy(
     proxy = proxy,
     name = "continuous-gradient",
     color_var = var,
-    range_var = var_,
-    scale_var = var_scale,
-    colors = if (!is.null(colors)) c(colors, "#fafafa") else NULL,
-    colors_legend = colors_legend,
-    legend_label = append(
-      x = range(var_, na.rm = TRUE),
-      values = diff(range(var_, na.rm = TRUE))/2,
-      after = 1
+    scale = scale_gradient(
+      data = data,
+      vars =  var,
+      low = low,
+      mid = NULL,
+      high = high,
+      range = range
     )
   )
 }
