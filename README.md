@@ -160,6 +160,98 @@ d3_map(shape = fr_dept) %>%
 ![](img/choropleth_france3.png)
 
 
+### Shiny usage
+
+A proxy method allow to update maps without re-generating them:
+
+![](img/d3maps-proxy.gif)
+
+Code:
+
+```r
+library( shiny )
+library( r2d3maps )
+library( rnaturalearth )
+library( dplyr )
+
+
+# data --------------------------------------------------------------------
+
+# shapes
+africa <- ne_countries(continent = "Africa", returnclass = "sf")
+
+# drinking water data (from WHO)
+data("water_africa")
+
+# add data to shapes
+africa <- left_join(
+  x = africa %>% select(adm0_a3_is, name, geometry),
+  y = water_africa %>% filter(year == 2015),
+  by = c("adm0_a3_is" = "iso3")
+)
+
+
+
+# app ---------------------------------------------------------------------
+
+ui <- fluidPage(
+  fluidRow(
+    column(
+      width = 10, offset = 1,
+      tags$h2("Proxy example:"),
+      d3Output(outputId = "mymap", width = "600px", height = "500px"),
+      radioButtons(
+        inputId = "var",
+        label = "Indicator:",
+        choices = list(
+          "Basic" = "national_at_least_basic",
+          "Limited" = "national_limited_more_than_30_mins",
+          "Unimproved" = "national_unimproved",
+          "Surface water" = "national_surface_water"
+        ),
+        inline = TRUE
+      ),
+      radioButtons(
+        inputId = "palette",
+        label = "Change color palette",
+        choices = c("viridis", "magma", "plasma", "Blues", "Greens", "Reds"),
+        inline = TRUE
+      )
+    )
+  )
+)
+
+server <- function(input, output, session) {
+
+  output$mymap <- renderD3({
+    d3_map(shape = africa) %>%
+      add_continuous_breaks(var = "national_at_least_basic") %>%
+      add_tooltip(value = "<b>{name}</b>: {national_at_least_basic}%") %>%
+      add_legend(title = "Population with at least basic access", suffix = "%") %>%
+      add_labs(title = "Drinking water in Africa", caption = "Data: https://washdata.org/")
+  })
+
+  title_legend <- list(
+    "national_at_least_basic" = "basic access",
+    "national_limited_more_than_30_mins" = "limited access",
+    "national_unimproved" = "unimproved water",
+    "national_surface_water" = "surface water"
+  )
+
+  observeEvent(list(input$var, input$palette), {
+    d3_map_proxy(shinyId = "mymap", data = africa) %>%
+      update_continuous_breaks(var = input$var, palette = input$palette) %>%
+      update_legend(title = sprintf(
+        "Population with %s", title_legend[[input$var]]
+      ), suffix = "%")
+  }, ignoreInit = TRUE)
+
+}
+
+shinyApp(ui, server)
+```
+
+
 ### Make your own
 
 Use `r2d3map` with an `sf` object to convert it to topojson and use a custom JavaScript script like in `r2d3`:

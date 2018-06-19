@@ -3,11 +3,9 @@
 
 # Packages ----------------------------------------------------------------
 
-library(shiny)
+library( shiny )
 library( r2d3maps )
-library( r2d3 )
 library( rnaturalearth )
-library( magrittr )
 library( dplyr )
 
 
@@ -16,23 +14,15 @@ library( dplyr )
 # shapes
 africa <- ne_countries(continent = "Africa", returnclass = "sf")
 
-
 # drinking water data
 data("water_africa")
-glimpse(water_africa)
-
 
 # add data to shapes
-
 africa <- left_join(
   x = africa %>% select(adm0_a3_is, name, geometry),
   y = water_africa %>% filter(year == 2015),
   by = c("adm0_a3_is" = "iso3")
 )
-africa$national_at_least_basic <- round(africa$national_at_least_basic)
-africa$national_limited_more_than_30_mins <- round(africa$national_limited_more_than_30_mins)
-africa$national_unimproved <- round(africa$national_unimproved)
-africa$national_surface_water <- round(africa$national_surface_water)
 
 
 
@@ -42,7 +32,7 @@ ui <- fluidPage(
   fluidRow(
     column(
       width = 10, offset = 1,
-      tags$h2("Example proxy"),
+      tags$h2("Proxy example:"),
       d3Output(outputId = "mymap", width = "600px", height = "500px"),
       radioButtons(
         inputId = "var",
