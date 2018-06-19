@@ -177,10 +177,12 @@ r2d3.onRender(function(json, div, width, height, options) {
                 .attr("y", 20)
                 .text(function(d, i) {
                   var lib = ticks_opts.axis_tick_lib[i];
-                  if (options.legend_opts.d3_format) {
-                    return d3.format(options.legend_opts.d3_format)(lib);
-                  } else {
-                    return options.legend_opts.prefix + lib + options.legend_opts.suffix;
+                  if (typeof lib != 'undefined') {
+                    if (options.legend_opts.d3_format) {
+                      return d3.format(options.legend_opts.d3_format)(lib);
+                    } else {
+                      return options.legend_opts.prefix + lib + options.legend_opts.suffix;
+                    }
                   }
                 });
 
@@ -253,10 +255,12 @@ r2d3.onRender(function(json, div, width, height, options) {
                           .attr("y", 20)
                           .text(function(d, i) {
                             var lib = ticks_opts.axis_tick_lib[i];
-                            if (options.legend_opts.d3_format) {
-                              return d3.format(options.legend_opts.d3_format)(lib);
-                            } else {
-                              return options.legend_opts.prefix + lib + options.legend_opts.suffix;
+                            if (typeof lib != 'undefined') {
+                              if (options.legend_opts.d3_format) {
+                                return d3.format(options.legend_opts.d3_format)(lib);
+                              } else {
+                                return options.legend_opts.prefix + lib + options.legend_opts.suffix;
+                              }
                             }
                           });
 

@@ -10,6 +10,8 @@
 #'
 #' @export
 #'
+#' @name proxy
+#'
 #' @importFrom shiny getDefaultReactiveDomain
 #'
 #' @examples
@@ -37,6 +39,31 @@ d3_map_proxy <- function(shinyId, data = NULL, session = shiny::getDefaultReacti
       )
     ),
     class = "d3_map_proxy"
+  )
+}
+
+#' @export
+#'
+#' @rdname proxy
+d3_cartogram_proxy <- function(shinyId, data = NULL, session = shiny::getDefaultReactiveDomain()) {
+
+  if (is.null(session)) {
+    stop("d3_cartogram_proxy must be called from the server function of a Shiny app")
+  }
+
+  if (!is.null(session$ns) && nzchar(session$ns(NULL)) && substring(shinyId, 1, nchar(session$ns(""))) != session$ns("")) {
+    shinyId <- session$ns(shinyId)
+  }
+
+  structure(
+    list(
+      session = session,
+      id = shinyId,
+      x = structure(
+        list(data = extract_data(data))
+      )
+    ),
+    class = "d3_cartogram_proxy"
   )
 }
 
@@ -75,7 +102,7 @@ d3_map_proxy <- function(shinyId, data = NULL, session = shiny::getDefaultReacti
 #'
 #' }
 update_continuous_breaks <- function(proxy, var, palette = NULL, direction = 1, n_breaks = 5, style = "pretty") {
-  if (!"d3_map_proxy" %in% class(proxy))
+  if (!any(c("d3_map_proxy", "d3_cartogram_proxy") %in% class(proxy)))
     stop("This function must be used with a d3_map_proxy object", call. = FALSE)
   data <- proxy$x$data
   if (is.null(data))
