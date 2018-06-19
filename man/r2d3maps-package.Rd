@@ -5,7 +5,7 @@
 \alias{r2d3maps-package}
 \title{A wrapper to 'r2d3' to make maps from 'sf' objects thanks to 'geojsonio'}
 \description{
-Create interactive choropleth maps
+Create interactive choropleth maps in D3
 }
 \author{
 Victor Perrier (@dreamRs_fr)

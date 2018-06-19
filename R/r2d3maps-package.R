@@ -1,6 +1,6 @@
 #' A wrapper to 'r2d3' to make maps from 'sf' objects thanks to 'geojsonio'
 #'
-#' Create interactive choropleth maps
+#' Create interactive choropleth maps in D3
 #'
 #' @name r2d3maps-package
 #' @docType package
@@ -18,6 +18,18 @@ NULL
 
 #' @importFrom magrittr %>%
 #' @name %>%
+#' @export
+#' @rdname r2d3maps-exports
+NULL
+
+#' @importFrom r2d3 d3Output
+#' @name d3Output
+#' @export
+#' @rdname r2d3maps-exports
+NULL
+
+#' @importFrom r2d3 renderD3
+#' @name renderD3
 #' @export
 #' @rdname r2d3maps-exports
 NULL

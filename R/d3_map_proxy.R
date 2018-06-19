@@ -98,7 +98,48 @@ d3_cartogram_proxy <- function(shinyId, data = NULL, session = shiny::getDefault
 #' @examples
 #' \dontrun{
 #'
-#' # todo
+#' if (interactive()) {
+#'
+#' library(r2d3maps)
+#' library(shiny)
+#'
+#' # data about Paris
+#' data("paris")
+#'
+#'
+#' # app
+#' ui <- fluidPage(
+#'   fluidRow(
+#'     column(
+#'       width = 8, offset = 2,
+#'       tags$h2("Proxy for continuous breaks scale"),
+#'       d3Output(outputId = "mymap"),
+#'       selectInput(
+#'         inputId = "var", label = "Variable:",
+#'         choices = grep(pattern = "AGE", x = names(paris), value = TRUE)
+#'       )
+#'     )
+#'   )
+#' )
+#'
+#' server <- function(input, output, session) {
+#'
+#'   output$mymap <- renderD3({
+#'     d3_map(shape = paris) %>%
+#'       add_continuous_breaks(var = "AGE_00", palette = "Blues") %>%
+#'       add_legend(d3_format = ".2s")
+#'   })
+#'
+#'   observeEvent(input$var, {
+#'     d3_map_proxy(shinyId = "mymap", data = paris) %>%
+#'       update_continuous_breaks(var = input$var, palette = "Blues")
+#'   }, ignoreInit = TRUE)
+#'
+#' }
+#'
+#' shinyApp(ui, server)
+#'
+#' }
 #'
 #' }
 update_continuous_breaks <- function(proxy, var, palette = NULL, direction = 1, n_breaks = 5, style = "pretty") {
@@ -142,7 +183,48 @@ update_continuous_breaks <- function(proxy, var, palette = NULL, direction = 1, 
 #' @examples
 #' \dontrun{
 #'
-#' # todo
+#' if (interactive()) {
+#'
+#' library(r2d3maps)
+#' library(shiny)
+#'
+#' # data about Paris
+#' data("paris")
+#'
+#'
+#' # app
+#' ui <- fluidPage(
+#'   fluidRow(
+#'     column(
+#'       width = 8, offset = 2,
+#'       tags$h2("Proxy for continuous breaks scale"),
+#'       d3Output(outputId = "mymap"),
+#'       selectInput(
+#'         inputId = "var", label = "Variable:",
+#'         choices = grep(pattern = "AGE", x = names(paris), value = TRUE)
+#'       )
+#'     )
+#'   )
+#' )
+#'
+#' server <- function(input, output, session) {
+#'
+#'   output$mymap <- renderD3({
+#'     d3_map(shape = paris) %>%
+#'       add_continuous_gradient(var = "AGE_00", low = "#FEE0D2", high = "#CB181D") %>%
+#'       add_legend(d3_format = ".2s")
+#'   })
+#'
+#'   observeEvent(input$var, {
+#'     d3_map_proxy(shinyId = "mymap", data = paris) %>%
+#'       update_continuous_gradient(var = input$var)
+#'   }, ignoreInit = TRUE)
+#'
+#' }
+#'
+#' shinyApp(ui, server)
+#'
+#' }
 #'
 #' }
 update_continuous_gradient <- function(proxy, var, low = NULL, high = NULL, range = NULL) {
@@ -173,4 +255,31 @@ update_continuous_gradient <- function(proxy, var, low = NULL, high = NULL, rang
 
 
 
-
+#' Update a legend in Shiny
+#'
+#' @param proxy A \code{d3_map_proxy} object.
+#' @param title Title for the legend.
+#' @param prefix A prefix of legend labels.
+#' @param suffix A suffix of legend labels.
+#' @param d3_format A string passed to \code{d3.format},
+#'  see \url{https://github.com/d3/d3-format}.
+#'  If used \code{prefix} and \code{suffix} are ignored.
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#'
+#' # todo
+#'
+#' }
+update_legend <- function(proxy, title = "", prefix = "", suffix = "", d3_format = NULL) {
+  if (!"d3_map_proxy" %in% class(proxy))
+    stop("This function must be used with a d3_map_proxy object", call. = FALSE)
+  .r2d3maps_proxy(
+    proxy = proxy,
+    name = "legend",
+    title = title, prefix = prefix, suffix = suffix,
+    d3_format = d3_format
+  )
+}

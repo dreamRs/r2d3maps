@@ -44,7 +44,28 @@ r2d3.onRender(function(json, div, width, height, options) {
   }
 
   // global variables
-  var map, projection, active = d3.select(null);
+  var map, projection, active = d3.select(null),
+      legend_prefix, legend_suffix, legend_d3_format, legend_title;
+
+
+  // Legend options
+  if (options.legend) {
+    legend_prefix = options.legend_opts.prefix;
+    legend_suffix = options.legend_opts.suffix;
+    legend_d3_format = options.legend_opts.d3_format;
+    legend_title = options.legend_opts.title;
+  }
+  if (HTMLWidgets.shinyMode) {
+    if (typeof id != 'undefined') {
+  	Shiny.addCustomMessageHandler('update-r2d3maps-legend-' + id,
+  	  function(proxy) {
+  		  legend_prefix = proxy.data.prefix;
+        legend_suffix = proxy.data.suffix;
+        legend_d3_format = proxy.data.d3_format;
+        legend_title = proxy.data.title;
+  	 });
+    }
+  }
 
   // Projection
   if (options.projection == "Mercator") {
@@ -119,7 +140,7 @@ r2d3.onRender(function(json, div, width, height, options) {
               .attr("class", "caption")
               .attr("x", 0)
               .attr("y", -6)
-              .text(options.legend_opts.title);
+              .text(legend_title);
           var legend = d3.legendColor()
               .orient("vertical")
               .labels(function (d) { return options.colors.values[d.i]; })
@@ -178,10 +199,10 @@ r2d3.onRender(function(json, div, width, height, options) {
                 .text(function(d, i) {
                   var lib = ticks_opts.axis_tick_lib[i];
                   if (typeof lib != 'undefined') {
-                    if (options.legend_opts.d3_format) {
-                      return d3.format(options.legend_opts.d3_format)(lib);
+                    if (legend_d3_format) {
+                      return d3.format(legend_d3_format)(lib);
                     } else {
-                      return options.legend_opts.prefix + lib + options.legend_opts.suffix;
+                      return legend_prefix + lib + legend_suffix;
                     }
                   }
                 });
@@ -194,7 +215,7 @@ r2d3.onRender(function(json, div, width, height, options) {
             .attr("text-anchor", "start")
             .attr("font-size", "80%")
             .attr("font-weight", "bold")
-            .text(options.legend_opts.title);
+            .text(legend_title);
 
 
         }
@@ -227,7 +248,9 @@ r2d3.onRender(function(json, div, width, height, options) {
                 var_rng = proxy.data.scale[key_brk].range_var;
                 ticks_opts =  proxy.data.scale[key_brk].ticks;
                 if (typeof colors_brk != 'undefined') {
-                  colorBreaks.range(colors_brk);
+                  if (colors_brk !== null) {
+                    colorBreaks.range(colors_brk);
+                  }
                   colorBreaks.domain(var_brk);
                   x.domain(var_rng);
                   if (options.legend) {
@@ -256,13 +279,23 @@ r2d3.onRender(function(json, div, width, height, options) {
                           .text(function(d, i) {
                             var lib = ticks_opts.axis_tick_lib[i];
                             if (typeof lib != 'undefined') {
-                              if (options.legend_opts.d3_format) {
-                                return d3.format(options.legend_opts.d3_format)(lib);
+                              if (legend_d3_format) {
+                                return d3.format(legend_d3_format)(lib);
                               } else {
-                                return options.legend_opts.prefix + lib + options.legend_opts.suffix;
+                                return legend_prefix + lib + legend_suffix;
                               }
                             }
                           });
+                    gc.selectAll("text.caption").remove();
+                    gc.append("text")
+                      .attr("class", "caption")
+                      .attr("x", 0)
+                      .attr("y", -6)
+                      .attr("fill", "#000")
+                      .attr("text-anchor", "start")
+                      .attr("font-size", "80%")
+                      .attr("font-weight", "bold")
+                      .text(legend_title);
 
                   }
                 }
@@ -281,6 +314,23 @@ r2d3.onRender(function(json, div, width, height, options) {
                 		.attr("d", path);
             });
           }
+          Shiny.addCustomMessageHandler('update-r2d3maps-legend-' + id,
+        	  function(proxy) {
+        		  legend_prefix = proxy.data.prefix;
+              legend_suffix = proxy.data.suffix;
+              legend_d3_format = proxy.data.d3_format;
+              legend_title = proxy.data.title;
+              gc.selectAll("text.caption").remove();
+              gc.append("text")
+                  .attr("class", "caption")
+                  .attr("x", 0)
+                  .attr("y", -6)
+                  .attr("fill", "#000")
+                  .attr("text-anchor", "start")
+                  .attr("font-size", "80%")
+                  .attr("font-weight", "bold")
+                  .text(legend_title);
+        	 });
 
         }
 
@@ -340,11 +390,12 @@ r2d3.onRender(function(json, div, width, height, options) {
               .attr("y", height-30);
 
           linearGradientSvg.append("text")
+            .attr("class", "caption")
           	.attr("x", 5)
           	.attr("y", height-35)
           	.style("font-size", 14)
           	.style("text-anchor", "start")
-          	.text(options.legend_opts.title);
+          	.text(legend_title);
 
           linearGradientSvg.append("text")
             .attr("class", "tick-label")
@@ -353,10 +404,10 @@ r2d3.onRender(function(json, div, width, height, options) {
           	.style("font-size", 11)
           	.style("text-anchor", "middle")
           	.text(function() {
-          	  if (options.legend_opts.d3_format) {
-          	    return d3.format(options.legend_opts.d3_format)(leg_lab_gdt1[0]);
+          	  if (legend_d3_format) {
+          	    return d3.format(legend_d3_format)(leg_lab_gdt1[0]);
           	  } else {
-          	    return options.legend_opts.prefix + leg_lab_gdt1[0] + options.legend_opts.suffix;
+          	    return legend_prefix + leg_lab_gdt1[0] + legend_suffix;
           	  }
           	});
           linearGradientSvg.append("text")
@@ -366,10 +417,10 @@ r2d3.onRender(function(json, div, width, height, options) {
           	.style("font-size", 11)
           	.style("text-anchor", "middle")
           	.text(function() {
-          	  if (options.legend_opts.d3_format) {
-          	    return d3.format(options.legend_opts.d3_format)(leg_lab_gdt1[1]);
+          	  if (legend_d3_format) {
+          	    return d3.format(legend_d3_format)(leg_lab_gdt1[1]);
           	  } else {
-          	    return options.legend_opts.prefix + leg_lab_gdt1[1] + options.legend_opts.suffix;
+          	    return legend_prefix + leg_lab_gdt1[1] + legend_suffix;
           	  }
           	});
           linearGradientSvg.append("text")
@@ -379,10 +430,10 @@ r2d3.onRender(function(json, div, width, height, options) {
           	.style("font-size", 11)
           	.style("text-anchor", "middle")
           	.text(function() {
-          	  if (options.legend_opts.d3_format) {
-          	    return d3.format(options.legend_opts.d3_format)(leg_lab_gdt1[2]);
+          	  if (legend_d3_format) {
+          	    return d3.format(legend_d3_format)(leg_lab_gdt1[2]);
           	  } else {
-          	    return options.legend_opts.prefix + leg_lab_gdt1[2] + options.legend_opts.suffix;
+          	    return legend_prefix + leg_lab_gdt1[2] + legend_suffix;
           	  }
           	});
         }
@@ -409,14 +460,20 @@ r2d3.onRender(function(json, div, width, height, options) {
                 function(proxy) {
                   key_gdt1 = proxy.data.color_var;
                   colors_gdt1 = proxy.data.scale[key_gdt1].colors;
-                  colors_leg_gdt1 = proxy.data.scale[key_gdt1].colors_legend;
+                  if (proxy.data.scale[key_gdt1].colors_legend !== null) {
+                    colors_leg_gdt1 = proxy.data.scale[key_gdt1].colors_legend;
+                  }
                   leg_lab_gdt1 = proxy.data.scale[key_gdt1].legend_label;
                   scale_var_gdt1 = proxy.data.scale[key_gdt1].scale_var;
                   range_var_gdt1 = proxy.data.scale[key_gdt1].range_var;
 
                   colorGradient.domain(scale_var_gdt1);
                   colorInterpolateGradient.domain(d3.extent(range_var_gdt1));
-                  colorGradient.range(colors_gdt1);
+
+
+                  if (colors_gdt1 !== null) {
+                    colorGradient.range(colors_gdt1);
+                  }
 
                   if (options.legend) {
                     linearGradient.selectAll("stop").remove();
@@ -435,10 +492,10 @@ r2d3.onRender(function(json, div, width, height, options) {
                     	.style("font-size", 11)
                     	.style("text-anchor", "middle")
                     	.text(function() {
-                    	  if (options.legend_opts.d3_format) {
-                    	    return d3.format(options.legend_opts.d3_format)(leg_lab_gdt1[0]);
+                    	  if (legend_d3_format) {
+                    	    return d3.format(legend_d3_format)(leg_lab_gdt1[0]);
                     	  } else {
-                    	    return options.legend_opts.prefix + leg_lab_gdt1[0] + options.legend_opts.suffix;
+                    	    return legend_prefix + leg_lab_gdt1[0] + legend_suffix;
                     	  }
                     	});
                     linearGradientSvg.append("text")
@@ -448,10 +505,10 @@ r2d3.onRender(function(json, div, width, height, options) {
                     	.style("font-size", 11)
                     	.style("text-anchor", "middle")
                     	.text(function() {
-                    	  if (options.legend_opts.d3_format) {
-                    	    return d3.format(options.legend_opts.d3_format)(leg_lab_gdt1[1]);
+                    	  if (legend_d3_format) {
+                    	    return d3.format(legend_d3_format)(leg_lab_gdt1[1]);
                     	  } else {
-                    	    return options.legend_opts.prefix + leg_lab_gdt1[1] + options.legend_opts.suffix;
+                    	    return legend_prefix + leg_lab_gdt1[1] + legend_suffix;
                     	  }
                     	});
                     linearGradientSvg.append("text")
@@ -461,10 +518,10 @@ r2d3.onRender(function(json, div, width, height, options) {
                     	.style("font-size", 11)
                     	.style("text-anchor", "middle")
                     	.text(function() {
-                    	  if (options.legend_opts.d3_format) {
-                    	    return d3.format(options.legend_opts.d3_format)(leg_lab_gdt1[2]);
+                    	  if (legend_d3_format) {
+                    	    return d3.format(legend_d3_format)(leg_lab_gdt1[2]);
                     	  } else {
-                    	    return options.legend_opts.prefix + leg_lab_gdt1[2] + options.legend_opts.suffix;
+                    	    return legend_prefix + leg_lab_gdt1[2] + legend_suffix;
                     	  }
                     	});
                   }
@@ -484,6 +541,21 @@ r2d3.onRender(function(json, div, width, height, options) {
                 }
               );
             }
+            Shiny.addCustomMessageHandler('update-r2d3maps-legend-' + id,
+          	  function(proxy) {
+          		  legend_prefix = proxy.data.prefix;
+                legend_suffix = proxy.data.suffix;
+                legend_d3_format = proxy.data.d3_format;
+                legend_title = proxy.data.title;
+                linearGradientSvg.selectAll("text.caption").remove();
+                linearGradientSvg.append("text")
+                  .attr("class", "caption")
+                	.attr("x", 5)
+                	.attr("y", height-35)
+                	.style("font-size", 14)
+                	.style("text-anchor", "start")
+                	.text(legend_title);
+        	 });
         }
       }
 

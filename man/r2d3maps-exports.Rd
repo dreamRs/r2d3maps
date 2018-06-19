@@ -3,6 +3,8 @@
 \name{r2d3maps-exports}
 \alias{r2d3maps-exports}
 \alias{\%>\%}
+\alias{d3Output}
+\alias{renderD3}
 \title{r2d3maps exported operators and S3 methods}
 \description{
 The following functions are imported and then re-exported

@@ -28,7 +28,48 @@ Update a continuous scale in Shiny
 \examples{
 \dontrun{
 
-# todo
+if (interactive()) {
+
+library(r2d3maps)
+library(shiny)
+
+# data about Paris
+data("paris")
+
+
+# app
+ui <- fluidPage(
+  fluidRow(
+    column(
+      width = 8, offset = 2,
+      tags$h2("Proxy for continuous breaks scale"),
+      d3Output(outputId = "mymap"),
+      selectInput(
+        inputId = "var", label = "Variable:",
+        choices = grep(pattern = "AGE", x = names(paris), value = TRUE)
+      )
+    )
+  )
+)
+
+server <- function(input, output, session) {
+
+  output$mymap <- renderD3({
+    d3_map(shape = paris) \%>\%
+      add_continuous_breaks(var = "AGE_00", palette = "Blues") \%>\%
+      add_legend(d3_format = ".2s")
+  })
+
+  observeEvent(input$var, {
+    d3_map_proxy(shinyId = "mymap", data = paris) \%>\%
+      update_continuous_breaks(var = input$var, palette = "Blues")
+  }, ignoreInit = TRUE)
+
+}
+
+shinyApp(ui, server)
+
+}
 
 }
 }
