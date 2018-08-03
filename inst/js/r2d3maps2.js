@@ -45,7 +45,7 @@ r2d3.onRender(function(json, div, width, height, options) {
 
   // global variables
   var map, active = d3.select(null),
-      legend_prefix, legend_suffix, legend_d3_format, legend_title;
+      legend_prefix, legend_suffix, legend_d3_format, legend_d3_locale, legend_title;
 
 
   // Legend options
@@ -53,6 +53,10 @@ r2d3.onRender(function(json, div, width, height, options) {
     legend_prefix = options.legend_opts.prefix;
     legend_suffix = options.legend_opts.suffix;
     legend_d3_format = options.legend_opts.d3_format;
+    legend_d3_locale = options.legend_opts.d3_locale;
+    if (legend_d3_locale) {
+      d3.formatDefaultLocale(legend_d3_locale);
+    }
     legend_title = options.legend_opts.title;
   }
   if (HTMLWidgets.shinyMode) {

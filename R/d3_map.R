@@ -245,9 +245,13 @@ add_zoom <- function(map, enabled = TRUE, type = "click") {
 #' @param d3_format A string passed to \code{d3.format},
 #'  see \url{https://github.com/d3/d3-format}.
 #'  If used \code{prefix} and \code{suffix} are ignored.
+#' @param d3_locale Locale for \code{d3_format}, for exemple \code{"fr-FR"} for french,
+#'  see possible values here \url{https://github.com/d3/d3-format/tree/master/locale}.
 #'
 #' @return A \code{r2d3map} \code{htmlwidget} object.
 #' @export
+#'
+#' @importFrom jsonlite fromJSON
 #'
 #' @examples
 #' \dontrun{
@@ -255,12 +259,16 @@ add_zoom <- function(map, enabled = TRUE, type = "click") {
 #' # todo
 #'
 #' }
-add_legend <- function(map, title = "", prefix = "", suffix = "", d3_format = NULL) {
+add_legend <- function(map, title = "", prefix = "", suffix = "", d3_format = NULL, d3_locale = NULL) {
+  if (!is.null(d3_locale)) {
+    path <- system.file(file.path("js/locale", paste0(d3_locale, ".json")), package = "r2d3maps")
+    d3_locale <- jsonlite::fromJSON(txt = path)
+  }
   map$x$options$legend <- TRUE
   .r2d3map_opt(
     map, "legend_opts",
     title = title, prefix = prefix, suffix = suffix,
-    d3_format = d3_format
+    d3_format = d3_format, d3_locale = d3_locale
   )
 }
 

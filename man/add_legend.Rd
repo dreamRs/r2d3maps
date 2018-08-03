@@ -4,7 +4,8 @@
 \alias{add_legend}
 \title{Add a legend to a map}
 \usage{
-add_legend(map, title = "", prefix = "", suffix = "", d3_format = NULL)
+add_legend(map, title = "", prefix = "", suffix = "", d3_format = NULL,
+  d3_locale = NULL)
 }
 \arguments{
 \item{map}{A \code{r2d3map} \code{htmlwidget} object.}
@@ -18,6 +19,9 @@ add_legend(map, title = "", prefix = "", suffix = "", d3_format = NULL)
 \item{d3_format}{A string passed to \code{d3.format},
 see \url{https://github.com/d3/d3-format}.
 If used \code{prefix} and \code{suffix} are ignored.}
+
+\item{d3_locale}{Locale for \code{d3_format}, for exemple \code{"fr-FR"} for french,
+see possible values here \url{https://github.com/d3/d3-format/tree/master/locale}.}
 }
 \value{
 A \code{r2d3map} \code{htmlwidget} object.
