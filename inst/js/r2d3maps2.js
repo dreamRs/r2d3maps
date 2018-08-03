@@ -44,7 +44,7 @@ r2d3.onRender(function(json, div, width, height, options) {
   }
 
   // global variables
-  var map, projection, active = d3.select(null),
+  var map, active = d3.select(null),
       legend_prefix, legend_suffix, legend_d3_format, legend_title;
 
 
@@ -67,40 +67,16 @@ r2d3.onRender(function(json, div, width, height, options) {
     }
   }
 
-  // Projection
-  if (options.projection == "Mercator") {
-    projection = d3.geoMercator();
-  } else if (options.projection == "ConicEqualArea") {
-    projection = d3.geoConicEqualArea();
-  } else if (options.projection == "NaturalEarth") {
-    projection = d3.geoNaturalEarth1();
-  } else {
-    projection = d3.geoAlbers();
-  }
 
-  var path = d3.geoPath()
-      .projection(projection);
 
   var svg = div.append("svg");
   svg.attr("width", width)
      .attr("height", height);
 
-  var states = topojson.feature(json, json.objects.states);
-
-  // set projection
-  projection
-      .scale(1)
-      .translate([0, 0]);
-
-  // define bounding box & associated scale & transform
-  var b = path.bounds(states),
-      s = 0.9 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height),
-      t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - 20 - s * (b[1][1] + b[0][1])) / 2];
-
-  // re-project
-  projection
-      .scale(s)
-      .translate(t);
+  var mapInit = init_map(json, width, height, options.projection),
+      projection = mapInit.projection,
+      path = mapInit.path,
+      states = mapInit.states;
 
   // Tooltip
   var divTooltip = div.append("div")

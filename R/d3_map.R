@@ -60,7 +60,8 @@ d3_map <- function(shape, projection = "Mercator", stroke_col = "#fff", stroke_w
     d3_version = 5, container = "div",
     dependencies = c(
       system.file("js/topojson.min.js", package = "r2d3maps"),
-      system.file("js/d3-legend.min.js", package = "r2d3maps")
+      system.file("js/d3-legend.min.js", package = "r2d3maps"),
+      system.file("js/r2d3maps-utils.js", package = "r2d3maps")
     ),
     # dependencies = list(
     #   htmlDependency(
