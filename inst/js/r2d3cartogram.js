@@ -325,7 +325,11 @@ r2d3.onRender(function(json, div, width, height, options) {
     			//d3.format(field.format || ","),
     			value = function(d) {
     			  //console.log(JSON.stringify(d)); // null here
-    			  return +d.properties[key];
+    			  var val = d.properties[key];
+    			  if (isNaN(val)) {
+    			    val = 0;
+    			  }
+    			  return +val;
     			},
     			values = states.data()
       			.map(value)
