@@ -4,10 +4,11 @@
 \alias{r2d3map}
 \title{Wrapper of `r2d3` to create maps}
 \usage{
-r2d3map(data, script, css = "auto", dependencies = NULL, options = NULL,
-  d3_version = c("5", "4", "3"), container = "svg", elementId = NULL,
-  width = NULL, height = NULL, sizing = default_sizing(),
-  viewer = c("internal", "external", "browser"))
+r2d3map(data, script, css = "auto", dependencies = NULL,
+  options = NULL, d3_version = c("5", "4", "3"), container = "svg",
+  elementId = NULL, width = NULL, height = NULL,
+  sizing = default_sizing(), viewer = c("internal", "external",
+  "browser"))
 }
 \arguments{
 \item{data}{An `sf` or `sp` object to convert to topojson.}

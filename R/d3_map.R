@@ -175,25 +175,36 @@ add_labs <- function(map, title = NULL, caption = NULL) {
 add_tooltip <- function(map, value = "<b>{name}</b><<scale_var>>", as_glue = TRUE, .na = "no data") {
   if (is.null(map$x$options$data))
     stop("No data !", call. = FALSE)
+  tooltip <- make_tooltip(
+    data = map$x$options$data,
+    value = value,
+    var = map$x$options$colors$color_var,
+    as_glue = as_glue,
+    .na = .na
+  )
+  map$x$options$tooltip_value <- tooltip
+  map$x$options$tooltip <- TRUE
+  return(map)
+}
+
+
+make_tooltip <- function(data, value, var = NULL, as_glue = TRUE, .na = "no data") {
   if (inherits(x = value, what = "formula")) {
-    tooltip <- model.frame(formula = value, data = map$x$options$data)[[1]]
+    tooltip <- model.frame(formula = value, data = data)[[1]]
   } else {
     if (as_glue) {
-      var <- map$x$options$colors$color_var
       if (is.null(var)) {
         var <- ""
       } else {
         var <- paste0(": {", var, "}")
       }
       tooltip <- glue(value, scale_var = var, .open = "<<", .close = ">>")
-      tooltip <- glue_data(tooltip, .x = map$x$options$data, .na = .na)
+      tooltip <- glue_data(tooltip, .x = data, .na = .na)
     } else {
       tooltip <- value
     }
   }
-  map$x$options$tooltip_value <- tooltip
-  map$x$options$tooltip <- TRUE
-  return(map)
+  return(tooltip)
 }
 
 

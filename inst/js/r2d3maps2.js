@@ -71,6 +71,22 @@ r2d3.onRender(function(json, div, width, height, options) {
     }
   }
 
+  // Tooltip
+  var toolitp = false;
+  var tooltip_value;
+  if (options.tooltip) {
+    tooltip = true;
+    tooltip_value = options.tooltip_value;
+  }
+  if (HTMLWidgets.shinyMode) {
+    if (typeof id != 'undefined') {
+  	Shiny.addCustomMessageHandler('update-r2d3maps-tooltip-' + id,
+  	  function(proxy) {
+  		  tooltip = true;
+        tooltip_value = proxy.data.tooltip_value;
+  	 });
+    }
+  }
 
 
   var svg = div.append("svg");
@@ -590,20 +606,20 @@ r2d3.onRender(function(json, div, width, height, options) {
       }
     }
 
-    if (options.tooltip) {
+    if (tooltip) {
 
       // Tooltip
       g.selectAll("path")
             .on("mouseover", function(d, i) {
                   d3.select(this).attr("opacity", 0.5);
                   // console.log(options.tooltip_value[i]);
-                  if (options.tooltip_value[i] !== null) {
+                  if (tooltip_value[i] !== null) {
                     var mouse = d3.mouse(this);
                     //console.log(JSON.stringify(mouse));
                     divTooltip.transition()
                       .duration(200)
                       .style("opacity", 0.9);
-                    divTooltip.html(options.tooltip_value[i])
+                    divTooltip.html(tooltip_value[i])
                       .style("left", (mouse[0]) + "px")
                       .style("top", (mouse[1]) + "px");
                   }

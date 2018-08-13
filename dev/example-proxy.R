@@ -61,7 +61,7 @@ server <- function(input, output, session) {
     d3_map(shape = africa) %>%
       add_continuous_breaks(var = "national_at_least_basic") %>%
       # add_continuous_gradient(var = "national_at_least_basic") %>%
-      add_tooltip(value = "<b>{name}</b>: {national_at_least_basic}%") %>%
+      add_tooltip(value = "<b>{name}</b>: {round(national_at_least_basic, 1)}%") %>%
       add_legend(title = "Population with at least basic access", suffix = "%") %>%
       add_labs(title = "Drinking water in Africa", caption = "Data: https://washdata.org/")
   })
@@ -76,10 +76,8 @@ server <- function(input, output, session) {
   observeEvent(list(input$var, input$palette), {
     d3_map_proxy(shinyId = "mymap", data = africa) %>%
       update_continuous_breaks(var = input$var, palette = input$palette) %>%
-      # update_continuous_gradient(var = input$var) %>%
-      update_legend(title = sprintf(
-        "Population with %s", title_legend[[input$var]]
-      ), suffix = "%")
+      update_legend(title = paste("Population with", title_legend[[input$var]]), suffix = "%") %>%
+      update_tootltip(value = sprintf("<b>{name}</b>: {round(%s, 1)}%%", input$var))
   }, ignoreInit = TRUE)
 
 }

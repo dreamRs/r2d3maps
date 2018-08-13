@@ -62,6 +62,7 @@ d3_cartogram(shape = paris) %>%
 
 
 library(shiny)
+library( r2d3maps )
 
 ui <- fluidPage(
   fluidRow(

@@ -4,8 +4,8 @@
 \alias{add_legend}
 \title{Add a legend to a map}
 \usage{
-add_legend(map, title = "", prefix = "", suffix = "", d3_format = NULL,
-  d3_locale = NULL)
+add_legend(map, title = "", prefix = "", suffix = "",
+  d3_format = NULL, d3_locale = NULL)
 }
 \arguments{
 \item{map}{A \code{r2d3map} \code{htmlwidget} object.}

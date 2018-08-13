@@ -329,3 +329,43 @@ update_legend <- function(proxy, title = "", prefix = "", suffix = "", d3_format
     d3_format = d3_format
   )
 }
+
+
+
+#' Update tooltip in Shiny
+#'
+#' @param proxy A \code{d3_map_proxy} object.
+#' @param value A \code{formula} or a \code{glue} string matching columns in \code{data}.
+#' @param as_glue Use a \code{glue} string, if \code{FALSE}
+#'  you can pass a character vector as tooltip.
+#' @param .na Value to replace NA values with (if \code{value} is a \code{glue} string).
+#'  Use \code{NULL} to don't display tooltip if there is NAs.
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#'
+#' if (interactive()) {
+#'
+#'
+#'
+#' }
+#'
+#' }
+update_tootltip <- function(proxy, value = "<b>{name}</b><<scale_var>>", as_glue = TRUE, .na = "no data") {
+  if (!"d3_map_proxy" %in% class(proxy))
+    stop("This function must be used with a d3_map_proxy object", call. = FALSE)
+  .r2d3maps_proxy(
+    proxy = proxy,
+    name = "tooltip",
+    tooltip = TRUE,
+    tooltip_value = make_tooltip(
+      data = proxy$x$data,
+      value = value,
+      var = proxy$x$options$colors$color_var,
+      as_glue = as_glue,
+      .na = .na
+    )
+  )
+}
