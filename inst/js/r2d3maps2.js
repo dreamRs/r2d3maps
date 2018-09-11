@@ -72,7 +72,7 @@ r2d3.onRender(function(json, div, width, height, options) {
   }
 
   // Tooltip
-  var toolitp = false;
+  var tooltip = false;
   var tooltip_value;
   if (options.tooltip) {
     tooltip = true;
@@ -88,7 +88,7 @@ r2d3.onRender(function(json, div, width, height, options) {
     }
   }
 
-
+  div.selectAll("svg").remove();
   var svg = div.append("svg");
   svg.attr("width", width)
      .attr("height", height);

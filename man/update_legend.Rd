@@ -62,7 +62,7 @@ server <- function(input, output, session) {
     d3_map_proxy(shinyId = "mymap", data = paris) \%>\%
       update_continuous_gradient(var = input$var) \%>\%
       update_legend(title = tolower(gsub(
-        patter = "_", replacement = " ", x = input$var
+        pattern = "_", replacement = " ", x = input$var
       )), d3_format = ".1s")
   }, ignoreInit = TRUE)
 

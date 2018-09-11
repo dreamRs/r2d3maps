@@ -41,6 +41,7 @@ r2d3.onRender(function(json, div, width, height, options) {
      .attr("height", height);
 
   var statesbbox = topojson.feature(json, json.objects.states);
+  //projection.fitSize([width, height], statesbbox);
 
   // set projection
   projection
@@ -214,7 +215,7 @@ r2d3.onRender(function(json, div, width, height, options) {
     if (options.select) {
 
       var selectInput = d3.select("#" + options.select_opts.id);
-      console.log(selectInput);
+      //console.log(selectInput);
       //var selectInput = document.getElementById(options.select_opts.id);
       selectInput.on("change", function(e) {
       //selectInput.addEventListener("change", function(e) {
